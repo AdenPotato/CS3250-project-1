@@ -60,6 +60,7 @@ Assign roles to each team member by completing the table below. A member may tak
 |Aden Lytle|manager,developer,tester,documenter|
 |Johnny (Juan) De La garza | developer, tester, documenter|
 |Isabella Eaton| developer, tester, documenter|
+|Elijah Damian-Ortiz| developer, tester, documenter|
 
 # Modeling Phase
 
@@ -117,7 +118,7 @@ Dockerfile
 Create a public GitHub repository for your project. Add all team members as collaborators. Share the URL of your repo with your instructor:  
 
 ```
-Project's GitHub Repository: <<URL>>
+Project's GitHub Repository: [https://github.com/AdenPotato/CS3250-project-1]
 ```
 
 Following software development collaboration best practices, create a **dev** branch to manage beta versions of your project. Additionally, each team member should create local temporary branches for individual development and testing tasks. Once the **dev** branch reaches a stable state, merge it into the **main** branch. The **main** branch should be protected. 
