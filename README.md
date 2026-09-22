@@ -58,9 +58,9 @@ Assign roles to each team member by completing the table below. A member may tak
 |Name|Role(s)|
 |--|--|
 |Aden Lytle|manager,developer,tester,documenter|
-|Johnny (Juan) De La garza | developer, tester, documenter|
-|Isabella Eaton| developer, tester, documenter|
-|Elijah Damian-Ortiz| developer, tester, documenter|
+|Johnny (Juan) De La garza | developer, tester|
+|Isabella Eaton| tester, documenter|
+|Elijah Damian-Ortiz| developer, tester|
 
 # Modeling Phase
 
