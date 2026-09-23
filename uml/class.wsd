@@ -1,4 +1,27 @@
 @startuml class
 left to right direction
 
+actor "Student" as student
+
+rectangle "GPA Tracker Application" {
+    usecase "Register Account" as UC_Register
+    usecase "Authenticate / Log In" as UC_Login
+    usecase "View Completed Courses" as UC_ViewCourses
+    usecase "Add Completed Course" as UC_AddCourse
+    usecase "Update Course Grade" as UC_UpdateGrade
+    usecase "Delete Course" as UC_DeleteCourse
+    usecase "View Overall GPA" as UC_ViewGPA
+    usecase "Calculate Overall GPA" as UC_CalcGPA
+}
+
+student --> UC_Register
+student --> UC_Login
+student --> UC_ViewCourses
+student --> UC_AddCourse
+student --> UC_UpdateGrade
+student --> UC_DeleteCourse
+student --> UC_ViewGPA
+
+UC_ViewGPA ..> UC_CalcGPA : <<include>>
+
 @enduml
