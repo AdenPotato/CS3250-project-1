@@ -1,14 +1,13 @@
 ---
 name: new-issue
 description: Open a GitHub issue for one piece of rubric work - draft it from the session, set a priority and phase milestone, then create it with gh. Use when a teammate has approved tracking the work.
-argument-hint: "[short description]"
 ---
 
 # /new-issue
 
 One issue, one piece of work, one rubric row. The [rubric tracker](../../../docs/protocol/process_protocol.md#rubric-tracker) is the definition of done for the project; issues are how the work toward a row gets split up and claimed.
 
-**Teammate-gated.** Only run this once someone has asked for the issue or approved it. Never open one unilaterally, not even a follow-on. If you have spotted work that wants an issue, **propose it - title plus one-line scope - and wait for a go.** A mechanical backstop lives in `.claude/settings.json` (`permissions.ask` prompts before any `gh issue create`).
+**Teammate-gated.** Only run this once someone has asked for the issue or approved it. Never open one unilaterally, not even a follow-on. If you have spotted work that wants an issue, **propose it - title plus one-line scope - and wait for a go.** Claude Code has a mechanical backstop in `.claude/settings.json`; other tools may not, so the gate is on you - ask before any `gh issue create`.
 
 ## Before anything
 

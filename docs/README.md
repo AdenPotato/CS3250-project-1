@@ -2,7 +2,7 @@
 
 The hub. This page links; the content lives in the leaf docs and is defined once.
 
-**The project:** a Flask web app that lets a student record completed courses with letter grades and see their credit-weighted GPA, plus a `gpa_calculator` library published to PyPI. Built for CS3250 under a Waterfall process on a three-week clock. Repo entry point is [CLAUDE.md](../CLAUDE.md).
+**The project:** a Flask web app that lets a student record completed courses with letter grades and see their credit-weighted GPA, plus a `gpa_calculator` library published to PyPI. Built for CS3250 under a Waterfall process on a three-week clock. Repo entry point is [AGENTS.md](../AGENTS.md) (`CLAUDE.md` imports it).
 
 ---
 
@@ -46,7 +46,7 @@ The hub. This page links; the content lives in the leaf docs and is defined once
 
 ## Skills
 
-Slash commands, in `.claude/skills/<name>/SKILL.md`.
+Slash commands, in `.claude/skills/<name>/SKILL.md`, mirrored in `.agents/skills/` for other AI tools.
 
 | Skill | Purpose |
 |---|---|
@@ -73,7 +73,8 @@ Slash commands, in `.claude/skills/<name>/SKILL.md`.
 ## Tree
 
 ```
-CLAUDE.md              entry point and the rules that bind every session
+AGENTS.md              entry point and the rules that bind every session
+CLAUDE.md              imports AGENTS.md, plus Claude Code notes
 docs/
   README.md            this hub
   protocol/            process, core, app
@@ -84,5 +85,6 @@ docs/
   changelog.md         newest-first work log
 .claude/
   agents/              app, ui, release
-  skills/              9 slash commands
+  skills/              13 slash commands
+.agents/               copy of .claude/agents and skills for other AI tools
 ```
