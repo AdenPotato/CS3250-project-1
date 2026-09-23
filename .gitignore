@@ -38,11 +38,6 @@ build/
 htmlcov/
 .tox/
 
-# Claude tooling and the docs tree - local only for now, not shared with the team
-.claude/
-CLAUDE.md
-docs/
-
 # Editors
 .vscode/
 .idea/
