@@ -1,0 +1,104 @@
+# Publishes gpa_calculator to TestPyPI, then PyPI, when a PR that touches the library merges into dev.
+# Uses PyPI Trusted Publishing - no API token is stored. The filename and the environment
+# names are registered on pypi.org; rename them there too if you rename them here.
+name: Publish gpa_calculator
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'src/gpa_calculator/**'
+      - 'src/pyproject.toml'
+      - 'src/README.md'
+  workflow_dispatch:
+
+# never run two publishes at once, and never cancel one halfway through an upload
+concurrency:
+  group: publish-lib
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      publish: ${{ steps.check.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # PyPI refuses a version it already has, so skip cleanly unless pyproject.toml was bumped
+      - name: Check whether this version is already on PyPI
+        id: check
+        run: |
+          python - <<'EOF'
+          import os, tomllib, urllib.error, urllib.request
+
+          with open('src/pyproject.toml', 'rb') as f:
+              project = tomllib.load(f)['project']
+          name, version = project['name'], project['version']
+          if '<' in name:
+              raise SystemExit(f'src/pyproject.toml still has the placeholder name {name!r}')
+
+          try:
+              urllib.request.urlopen(f'https://pypi.org/pypi/{name}/{version}/json')
+              publish = 'false'
+              print(f'::notice::{name} {version} is already on PyPI - bump the version in src/pyproject.toml to publish')
+          except urllib.error.HTTPError as e:
+              if e.code != 404:
+                  raise
+              publish = 'true'
+              print(f'{name} {version} is new - publishing')
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write(f'publish={publish}\n')
+          EOF
+
+      - name: Build and check the distribution
+        if: steps.check.outputs.publish == 'true'
+        working-directory: src
+        run: |
+          pip install build twine
+          python -m build
+          twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        if: steps.check.outputs.publish == 'true'
+        with:
+          name: dist
+          path: src/dist/
+
+  testpypi:
+    needs: build
+    if: needs.build.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      # skip-existing lets a re-run succeed when TestPyPI already has this version
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+
+  pypi:
+    needs: [build, testpypi]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
