@@ -20,3 +20,10 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/pypa/sampleproject"
 "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+
+# ship only the library - src/ also holds the Flask app and init_db.py
+[tool.hatch.build.targets.wheel]
+packages = ["gpa_calculator"]
+
+[tool.hatch.build.targets.sdist]
+include = ["gpa_calculator"]

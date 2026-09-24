@@ -1,0 +1,54 @@
+# keeps the build context small and keeps local state out of the image
+# the image only needs requirements.txt, src/, templates/ and static/
+
+# version control and CI
+.git/
+.gitignore
+.github/
+
+# virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# python bytecode and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# the sqlite database - init_db.py builds a fresh one inside the container
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# gpa_calculator build output - the app installs the library from PyPI
+dist/
+build/
+*.egg-info/
+
+# secrets - never bake these into an image
+.env
+.env.*
+.pypirc
+*.pem
+*.key
+
+# docs, diagrams, screenshots and AI tooling - not needed to run the app
+docs/
+uml/
+pics/
+.agents/
+.claude/
+AGENTS.md
+CLAUDE.md
+
+# editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
