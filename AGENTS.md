@@ -30,7 +30,7 @@ This file is the entry point for every AI coding agent (Codex, Gemini, Cursor, C
 4. **Never commit to `main`.** `main` is protected and is reached only by merging `dev`. See [Branching](docs/protocol/core_protocol.md#branching).
 5. **Never commit secrets or the database.** `.venv/`, `instance/prj1.db`, and `__pycache__/` stay out of version control. The `app.secret_key` in the baseline is a placeholder - read it from the environment before delivery.
 6. **Ask when the requirement is ambiguous.** The assignment is the source of truth; when it is silent, ask a teammate rather than inventing a requirement.
-7. **AI agents never commit.** No AI agent runs `git commit`, `git push`, or `git merge`, or opens or merges PRs - it edits files and a teammate reviews and commits them. Never add a `Co-Authored-By` trailer or a "Generated with" line for any AI tool to a commit message, PR, or issue, including drafts written for a teammate.
+7. **AI agents never commit.** No AI agent runs `git commit`, `git push`, or `git merge`, or merges PRs - it edits files and a teammate reviews and commits them. The one exception: when a teammate asks, an agent may open a PR into `dev` for a GitHub issue, from a branch the teammate has pushed, with the issue linked in the body. Never add a `Co-Authored-By` trailer or a "Generated with" line for any AI tool to a commit message, PR, or issue, including drafts written for a teammate.
 
 ## Skills
 
