@@ -86,7 +86,7 @@ The scale is defined in `src/gpa_calculator/__init__.py` and duplicated in `src/
 
 ## The class diagram
 
-`uml/class.wsd` is PlantUML and currently empty. It needs three classes with their attributes, the two relationships, and the multiplicities - `User "1" -- "0..*" Enrollment` and `Course "1" -- "0..*" Enrollment`. Mark `Enrollment` as the association class.
+`uml/class.wsd` is PlantUML, rendered to `uml/class.png`. It has three classes with their attributes, the two relationships, and the multiplicities - `User "1" -- "0..*" Enrollment` and `Course "1" -- "0..*" Enrollment` - with `Enrollment` marked as the association class.
 
 Generate or refresh it with `/uml`. Render with the PlantUML extension in VS Code, or `plantuml uml/class.wsd`, and commit the rendered PNG next to the source so the instructor does not have to render it.
 

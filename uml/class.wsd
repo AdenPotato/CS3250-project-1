@@ -1,27 +1,36 @@
 @startuml class
 left to right direction
+hide circle
+skinparam classAttributeIconSize 0
 
-actor "Student" as student
-
-rectangle "GPA Tracker Application" {
-    usecase "Register Account" as UC_Register
-    usecase "Authenticate / Log In" as UC_Login
-    usecase "View Completed Courses" as UC_ViewCourses
-    usecase "Add Completed Course" as UC_AddCourse
-    usecase "Update Course Grade" as UC_UpdateGrade
-    usecase "Delete Course" as UC_DeleteCourse
-    usecase "View Overall GPA" as UC_ViewGPA
-    usecase "Calculate Overall GPA" as UC_CalcGPA
+class User {
+  +id : String <<PK>>
+  +name : String
+  +about : String
+  +passwd : LargeBinary
 }
 
-student --> UC_Register
-student --> UC_Login
-student --> UC_ViewCourses
-student --> UC_AddCourse
-student --> UC_UpdateGrade
-student --> UC_DeleteCourse
-student --> UC_ViewGPA
+class Course {
+  +prefix : String <<PK>>
+  +number : String <<PK>>
+  +name : String
+  +credits : Integer
+}
 
-UC_ViewGPA ..> UC_CalcGPA : <<include>>
+class Enrollment <<association class>> {
+  +user_id : String <<PK,FK>>
+  +course_prefix : String <<PK,FK>>
+  +course_number : String <<PK,FK>>
+  +grade : String
+}
 
+User "1" -- "0..*" Enrollment
+Course "1" -- "0..*" Enrollment
+
+note bottom of Enrollment
+  association class - resolves the
+  User-Course many-to-many and carries the grade.
+  FK user_id -> users.id
+  FK (course_prefix, course_number) -> courses(prefix, number)
+end note
 @enduml
