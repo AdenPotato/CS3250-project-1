@@ -1,15 +1,11 @@
-# Publishes gpa_calculator to TestPyPI, then PyPI, when a PR that touches the library merges into dev.
+# Publishes gpa_calculator to PyPI on every merge into dev, skipping when the version is already up.
 # Uses PyPI Trusted Publishing - no API token is stored. The filename and the environment
-# names are registered on pypi.org; rename them there too if you rename them here.
+# name are registered on pypi.org; rename them there too if you rename them here.
 name: Publish gpa_calculator
 
 on:
   push:
     branches: [dev]
-    paths:
-      - 'src/gpa_calculator/**'
-      - 'src/pyproject.toml'
-      - 'src/README.md'
   workflow_dispatch:
 
 # never run two publishes at once, and never cancel one halfway through an upload
@@ -70,29 +66,9 @@ jobs:
           name: dist
           path: src/dist/
 
-  testpypi:
+  pypi:
     needs: build
     if: needs.build.outputs.publish == 'true'
-    runs-on: ubuntu-latest
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/GPA-Calculator-CS3250-aden
-    permissions:
-      id-token: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      # skip-existing lets a re-run succeed when TestPyPI already has this version
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          skip-existing: true
-
-  pypi:
-    needs: [build, testpypi]
     runs-on: ubuntu-latest
     environment:
       name: pypi
