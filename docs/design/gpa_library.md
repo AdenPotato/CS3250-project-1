@@ -48,11 +48,11 @@ Round for display in the template, not in the library. `calculate_gpa` returns t
 
 ## Packaging
 
-`src/pyproject.toml` is the hatchling build config, with placeholders to fill:
+`src/pyproject.toml` is the hatchling build config. The PyPI name is `GPA-Calculator-CS3250-aden`:
 
 ```toml
 [project]
-name = "<your_name>lib"          # must be globally unique on PyPI
+name = "GPA-Calculator-CS3250-aden"   # must be globally unique on PyPI
 version = "0.0.1"
 authors = [{ name="...", email="..." }]
 description = "..."
@@ -85,7 +85,7 @@ Then verify it round-trips, in a clean environment:
 
 ```
 python -m venv /tmp/check && source /tmp/check/bin/activate.fish
-pip install <your-dist-name>
+pip install GPA-Calculator-CS3250-aden
 python -c "from gpa_calculator import calculate_gpa; print(calculate_gpa([{'grade':'A','credits':3}]))"
 ```
 

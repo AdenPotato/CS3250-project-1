@@ -63,7 +63,7 @@ left to right direction
 actor Visitor
 actor Student
 
-rectangle "GPA Calculator" {
+rectangle "GPA Calculator Web App" {
   usecase UC1 as "Sign up"
   usecase UC2 as "Sign in"
   usecase UC3 as "Sign out"
