@@ -76,6 +76,6 @@ A student removes an enrollment. It leaves the list and the GPA recomputes. The 
 
 ## The diagram
 
-`uml/use_case.wsd` is PlantUML and currently empty. It needs both actors, the eight use cases, the `<<include>>` from UC4 to UC5, the `<<extend>>` from UC7 to UC6, and a boundary box around the system. Keep `left to right direction` for readability.
+`uml/use_case.wsd` is PlantUML, rendered to `uml/use_case.png`. It has both actors, the eight use cases, the `<<include>>` from UC4 to UC5, the `<<extend>>` from UC7 to UC6, and a boundary box around the system. Keep `left to right direction` for readability.
 
 Generate or refresh it with `/uml`, render it, and commit the PNG alongside the source.

@@ -83,7 +83,7 @@ The definition of done for the whole project. Keep the status column current; `/
 |---|---|---|---|
 | +5 | Planning: schedule | Planning | not started |
 | +5 | Planning: team roles | Planning | not started |
-| +5 | Modeling: use case diagram | Modeling | not started |
+| +5 | Modeling: use case diagram | Modeling | done |
 | +5 | Modeling: class diagram | Modeling | not started |
 | +5 | Checkpoint | Modeling | not started |
 | +10 | Courses data load (`init_db.py`, 5+ courses) | Construction | not started |
