@@ -3,12 +3,12 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "<your_name>lib"
+name = "GPA-Calculator-CS3250-aden"
 version = "0.0.1"
 authors = [
-  { name="<YOUR_NAME>", email="<YOUR_EMAIL>" },
+  { name="AdenPotato" },
 ]
-description = "A small example package"
+description = "Credit-weighted GPA calculation from letter grades and credit hours"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -18,8 +18,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://github.com/AdenPotato/CS3250-project-1"
+"Bug Tracker" = "https://github.com/AdenPotato/CS3250-project-1/issues"
 
 # ship only the library - src/ also holds the Flask app and init_db.py
 [tool.hatch.build.targets.wheel]

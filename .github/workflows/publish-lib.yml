@@ -74,7 +74,9 @@ jobs:
     needs: build
     if: needs.build.outputs.publish == 'true'
     runs-on: ubuntu-latest
-    environment: testpypi
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/GPA-Calculator-CS3250-aden
     permissions:
       id-token: write
     steps:
@@ -92,7 +94,9 @@ jobs:
   pypi:
     needs: [build, testpypi]
     runs-on: ubuntu-latest
-    environment: pypi
+    environment:
+      name: pypi
+      url: https://pypi.org/p/GPA-Calculator-CS3250-aden
     permissions:
       id-token: write
     steps:
