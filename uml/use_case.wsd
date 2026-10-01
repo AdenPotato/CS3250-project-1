@@ -15,11 +15,14 @@ rectangle "GPA Calculator Web App" {
   usecase UC8 as "Delete an enrollment"
 }
 
+Student --|> Visitor : Visitor becomes\nStudent at sign in
+
 Visitor --> UC1
 Visitor --> UC2
 Student --> UC3
 Student --> UC4
 Student --> UC6
+Student --> UC7
 Student --> UC8
 
 UC4 ..> UC5 : <<include>>
