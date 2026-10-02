@@ -54,7 +54,7 @@ Points to get right: the **composite primary key** on `Course`, the composite FK
 
 ## Use case diagram
 
-`uml/use_case.wsd` needs both actors, the eight use cases, a system boundary, and the two relationships.
+`uml/use_case.wsd` needs both actors and the generalization between them, the eight use cases, a system boundary, and the two relationships.
 
 ```plantuml
 @startuml use_case
@@ -74,11 +74,14 @@ rectangle "GPA Calculator Web App" {
   usecase UC8 as "Delete an enrollment"
 }
 
+Student --|> Visitor : Visitor becomes\nStudent at sign in
+
 Visitor --> UC1
 Visitor --> UC2
 Student --> UC3
 Student --> UC4
 Student --> UC6
+Student --> UC7
 Student --> UC8
 
 UC4 ..> UC5 : <<include>>
@@ -86,7 +89,7 @@ UC7 ..> UC6 : <<extend>>
 @enduml
 ```
 
-`Student` inheriting from `Visitor` is a reasonable refinement if the team wants it. Keep `left to right direction` - the default layout is unreadable past four use cases.
+Every use case connects to an actor, directly or through an `<<include>>`. `Student --|> Visitor` shows that signing in turns a Visitor into a Student. Keep `left to right direction` - the default layout is unreadable past four use cases.
 
 ## Render and commit
 

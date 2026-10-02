@@ -9,6 +9,8 @@ The Modeling phase output for behavior - the requirements analysis behind `uml/u
 - **Visitor** - an unauthenticated person. Can see the landing page, sign up, and sign in. Nothing else.
 - **Student** - an authenticated user. Everything below.
 
+A Visitor becomes a Student by signing in (UC2). The diagram shows this as a generalization, `Student --|> Visitor`: a Student is a Visitor who has signed in.
+
 There is no administrator actor. The course catalog is loaded by `init_db.py` outside the application, which is why no use case creates a course.
 
 ---
@@ -76,6 +78,6 @@ A student removes an enrollment. It leaves the list and the GPA recomputes. The 
 
 ## The diagram
 
-`uml/use_case.wsd` is PlantUML, rendered to `uml/use_case.png`. It has both actors, the eight use cases, the `<<include>>` from UC4 to UC5, the `<<extend>>` from UC7 to UC6, and a boundary box around the system. Keep `left to right direction` for readability.
+`uml/use_case.wsd` is PlantUML, rendered to `uml/use_case.png`. It has both actors, the generalization from Student to Visitor labelled with the sign in change, the eight use cases each tied to an actor, the `<<include>>` from UC4 to UC5, the `<<extend>>` from UC7 to UC6, and a boundary box around the system. UC5 has no actor line of its own because it is reached through UC4. Keep `left to right direction` for readability.
 
 Generate or refresh it with `/uml`, render it, and commit the PNG alongside the source.
