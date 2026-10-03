@@ -13,6 +13,19 @@ Add rows with `/test-log`.
 | | | | | | |
 | Deployment - Docker Container Run | 2026-10-02 | 21:15 | Isabella Eaton | failed | Built image and ran container on port 5000. App crashed on GET `/` with `TemplateNotFound: index.html` because templates were missing from `/app/src/app/templates/`. |
 | Deployment - Docker Container Run | 2026-10-02 | 21:25 | Isabella Eaton | passed | Updated Dockerfile to copy `templates/` and `static/` to `/app/src/app/`. Re-built with `--no-cache` and verified app loads cleanly at `http://localhost:5000` with signup, CRUD, and GPA calculation working. |
+| Sign up with valid details | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | POST `/users/signup` with id `qa150112`, name, about and matching passwords, CSRF token from the form. Expected a redirect to login; got 302 to `/users/login`, and the account then signed in. |
+| Sign up with a duplicate id | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | Submitted id `qa150112` a second time with a different name and password. Expected the form back with a message; got 200 with "That id is already taken." and the typed id kept in the field. |
+| Sign up with mismatched passwords | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | Id `qa150112b`, confirm password one character off. Expected a rejection; got 200 with "Passwords must match.", and signing in as `qa150112b` afterwards failed, so no account was created. |
+| Sign up with a blank form | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | All fields empty. Expected a required message per field; got 200 with "This field is required." on id, name, password and confirm password. |
+| Sign up without a CSRF token | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | Valid details, no `csrf_token` field. Expected no account; got the form back with 200, and signing in with those details failed. |
+| Sign in with correct credentials | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | Id `qa150112` and its password. Expected the enrollments page; got 302 to `/enrollments`, which then returned 200. |
+| Sign in with a wrong password | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | Id `qa150112`, wrong password. Expected a message that does not say which field was wrong; got 200 with "Invalid id or password.", and `/enrollments` still redirected to login. |
+| Sign in with an unknown id | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | An id that was never signed up. Expected the same message as a wrong password; got 200 with "Invalid id or password." - identical text. |
+| Sign out ends the session | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | GET `/users/signout` while signed in. Expected the landing page and a dead session; got 302 to `/index.html`, then `/enrollments` redirected to `/users/login?next=%2Fenrollments`. A second student signed in from another session stayed signed in. |
+| Enrollments page for a new account - empty state | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | Signed in as the new `qa150112`. Expected a sentence and a link, not a bare table; got 200 with "You have no enrollments yet.", a link to `/enrollments/create`, and no table. No GPA line yet - that is #16. |
+| Signed-out access to protected routes | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | With no session: GET `/enrollments`, GET `/enrollments/create`, POST `/enrollments/delete/CS/3250`, GET `/users/signout`. Expected a redirect to login for each; all four returned 302 to `/users/login?next=...`. |
+
+The 2026-10-03 15:01 rows were run on branch `11-aden-auth-routes` as HTTP requests against the dev server (`flask --app app run`), reading the returned status, redirect and page text. Nothing was looked at in a browser, so the page layout is not covered by them.
 
 Result is `passed` or `failed`. A `failed` row **stays in the table** - delete nothing. When it is fixed, add a new row for the retest and reference the failure. A log with no failures in it reads as a log nobody actually used.
 
@@ -24,17 +37,17 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 ### R1 - Authentication
 
-- [ ] Sign up with valid details creates the account
-- [ ] Sign up with a duplicate id is rejected with a message
-- [ ] Sign up with mismatched passwords is rejected
-- [ ] Sign in with correct credentials reaches the enrollments page
-- [ ] Sign in with a wrong password is rejected, and the message does not reveal which field was wrong
-- [ ] Sign in with an unknown id is rejected the same way
-- [ ] Sign out ends the session; going back to `/enrollments` redirects to login
+- [x] Sign up with valid details creates the account
+- [x] Sign up with a duplicate id is rejected with a message
+- [x] Sign up with mismatched passwords is rejected
+- [x] Sign in with correct credentials reaches the enrollments page
+- [x] Sign in with a wrong password is rejected, and the message does not reveal which field was wrong
+- [x] Sign in with an unknown id is rejected the same way
+- [x] Sign out ends the session; going back to `/enrollments` redirects to login
 
 ### R2 - View enrollments
 
-- [ ] A new account sees the empty state, not a bare table
+- [x] A new account sees the empty state, not a bare table
 - [ ] After creating enrollments, all of them are listed with prefix, number, name, credits and grade
 - [ ] Signed in as a second student, only that student's enrollments appear
 
@@ -65,7 +78,7 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 ### Security
 
-- [ ] `/enrollments`, `/enrollments/create` and delete all redirect to login when signed out
+- [x] `/enrollments`, `/enrollments/create` and delete all redirect to login when signed out
 - [ ] Editing the delete URL to another student's course does not delete their enrollment
 - [ ] The database holds a bcrypt hash, not a plaintext password (check with `sqlite3` or a viewer)
 

@@ -1,6 +1,6 @@
 .venv/
 .git/
-__pycache__/
-instance/
-*.pyc
+**/__pycache__/
+**/instance/
+**/*.pyc
 .DS_Store
