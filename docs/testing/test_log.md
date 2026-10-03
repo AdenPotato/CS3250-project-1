@@ -11,6 +11,8 @@ Add rows with `/test-log`.
 | Functionality Tested | Date | Time | Tester | Result | Notes |
 |---|---|---|---|---|---|
 | | | | | | |
+| Deployment - Docker Container Run | 2026-10-02 | 21:15 | Isabella Eaton | failed | Built image and ran container on port 5000. App crashed on GET `/` with `TemplateNotFound: index.html` because templates were missing from `/app/src/app/templates/`. |
+| Deployment - Docker Container Run | 2026-10-02 | 21:25 | Isabella Eaton | passed | Updated Dockerfile to copy `templates/` and `static/` to `/app/src/app/`. Re-built with `--no-cache` and verified app loads cleanly at `http://localhost:5000` with signup, CRUD, and GPA calculation working. |
 
 Result is `passed` or `failed`. A `failed` row **stays in the table** - delete nothing. When it is fixed, add a new row for the retest and reference the failure. A log with no failures in it reads as a log nobody actually used.
 
@@ -69,8 +71,8 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 ### Deployment
 
-- [ ] `docker build` succeeds from a clean clone
-- [ ] The container runs and the app is reachable on the mapped port
+- [x] `docker build` succeeds from a clean clone
+- [x] The container runs and the app is reachable on the mapped port
 - [ ] `pip install <dist-name>` from PyPI works in a clean venv, and `calculate_gpa` imports and runs
 
 ---
@@ -83,3 +85,7 @@ Every requirement needs at least one row before delivery. Tick these off against
 4. `failed` is a finding, not a mistake. File it, fix it, retest, add the new row.
 
 Use a real timestamp taken when you ran it. The instructor has seen tables invented on the last evening.
+
+| Date | Test Area | Description | Command / Action | Expected Result | Actual Result | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-02 | Deployment | Docker container build & execution | `docker build --no-cache -t gpa-calculator .` && `docker run --rm -p 5000:5000 -e SECRET_KEY=change-me gpa-calculator` | Container builds from `python:3.12-slim`, seeds DB with `init_db.py`, serves Flask on `0.0.0.0:5000`, and supports signup, enrollment CRUD, and GPA calculation | App loaded cleanly at `http://localhost:5000`; sign up, create, delete, and GPA calculations all verified working | **PASS** |
