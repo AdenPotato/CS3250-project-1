@@ -18,28 +18,47 @@ import bcrypt
 @app.route('/index')
 @app.route('/index.html')
 def index(): 
-    return render_template('index.html')
+    return render_template('index.html', title='GPA Calculator')
 
-# TODO: from hwk-3
 @app.route('/users/signup', methods=['GET', 'POST'])
 def signup():
-    return "Work in progress..."
-    
-# TODO: from hwk-3
+    form = SignUpForm()
+    if form.validate_on_submit():
+        if db.session.get(User, form.id.data):
+            form.id.errors.append('That id is already taken.')
+        else:
+            hashed = bcrypt.hashpw(form.passwd.data.encode(), bcrypt.gensalt())
+            user = User(id=form.id.data, name=form.name.data, about=form.about.data, passwd=hashed)
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('login'))
+    return render_template('signup.html', title='Sign Up', form=form)
+
 @app.route('/users/login', methods=['GET', 'POST'])
 def login():
-    return "Work in progress..."
+    form = LoginForm()
+    error = None
+    if form.validate_on_submit():
+        user = db.session.get(User, form.id.data)
+        if user and bcrypt.checkpw(form.passwd.data.encode(), user.passwd):
+            login_user(user)
+            return redirect(url_for('list_enrollments'))
+        # one message for both failures, so the form cannot be used to find valid ids
+        error = 'Invalid id or password.'
+    return render_template('login.html', title='Login', form=form, error=error)
 
-# TODO: from hwk-3
 @app.route('/users/signout', methods=['GET', 'POST'])
+@login_required
 def signout():
-    return "Work in progress..."
+    logout_user()
+    return redirect(url_for('index'))
 
-# TODO
 @app.route('/enrollments')
 @login_required
 def list_enrollments():
-    return "Work in progress..."
+    enrollments = sorted(current_user.enrollments, key=lambda e: (e.course_prefix, e.course_number))
+    # one form instance is enough - every row's delete button carries the same CSRF token
+    return render_template('enrollments.html', title='Enrollments', enrollments=enrollments, delete_form=DeleteEnrollmentForm())
 
 # TODO
 @app.route('/enrollments/delete/<course_prefix>/<course_number>', methods=['POST'])

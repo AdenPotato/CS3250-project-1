@@ -9,9 +9,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy source code
 COPY src/ ./src/
 
-# Copy templates and static files to where Flask expects them (relative to WORKDIR /app/src)
-COPY templates/ ./src/templates/
-COPY static/ ./src/static/
+# Copy templates and static files beside src/, where the app looks for them (../../ from src/app)
+COPY templates/ ./templates/
+COPY static/ ./static/
 
 WORKDIR /app/src
 ENV FLASK_APP=app

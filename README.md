@@ -141,8 +141,21 @@ At this stage, you are NOT expected to write automated tests. Instead, you shoul
 
 |Functionality Tested|Date|Time|Result|
 |--|--|--|--|
-|Sign Up|99/99/23|99:99|passed|
-|...|...|...|...|
+|Deployment - Docker container run|10/02/26|21:15|failed|
+|Deployment - Docker container run (retest)|10/02/26|21:25|passed|
+|Sign up with valid details|10/03/26|15:01|passed|
+|Sign up with a duplicate id|10/03/26|15:01|passed|
+|Sign up with mismatched passwords|10/03/26|15:01|passed|
+|Sign up with a blank form|10/03/26|15:01|passed|
+|Sign up without a CSRF token|10/03/26|15:01|passed|
+|Sign in with correct credentials|10/03/26|15:01|passed|
+|Sign in with a wrong password|10/03/26|15:01|passed|
+|Sign in with an unknown id|10/03/26|15:01|passed|
+|Sign out ends the session|10/03/26|15:01|passed|
+|Enrollments page for a new account - empty state|10/03/26|15:01|passed|
+|Signed-out access to protected routes|10/03/26|15:01|passed|
+
+The full log, with the tester and the notes for each row, is in [docs/testing/test_log.md](docs/testing/test_log.md). The 10/03/26 15:01 rows were run as HTTP requests against the dev server, not in a browser.
 
 # Deployment Phase
 

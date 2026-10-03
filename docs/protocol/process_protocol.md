@@ -87,8 +87,8 @@ The definition of done for the whole project. Keep the status column current; `/
 | +5 | Modeling: class diagram | Modeling | done |
 | +5 | Checkpoint | Modeling | not started |
 | +10 | Courses data load (`init_db.py`, 5+ courses) | Construction | not started |
-| +5 | Authentication (signup, login, signout) | Construction | not started |
-| +10 | List of enrollments | Construction | not started |
+| +5 | Authentication (signup, login, signout) | Construction | in progress |
+| +10 | List of enrollments | Construction | in progress |
 | +10 | Create enrollment | Construction | not started |
 | +10 | Delete enrollment | Construction | not started |
 | +10 | GPA calculation and display | Construction | not started |

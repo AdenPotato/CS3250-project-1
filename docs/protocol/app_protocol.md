@@ -30,15 +30,15 @@ Everything in `src/app/` is small on purpose. If `routes.py` grows past a few hu
 
 `src/app/__init__.py` wires four things in a fixed order: the Flask app, SQLAlchemy, the models, then the login manager and `user_loader`, and finally `routes` at the bottom. That trailing `from app import routes` is not a style mistake - it is what lets `routes.py` import `app` without a circular import. Leave the ordering alone.
 
-Three things in the baseline must change before delivery:
+Two things the baseline got wrong are fixed, and one behavior is worth knowing:
 
-- **`Flask("GPA Calculator Web App")`** uses a display string where Flask expects an import name. Flask cannot resolve that to a package, so it falls back to the working directory when locating `templates/` and `static/` - which are a level above `src/` in this layout. Expect `TemplateNotFound` on the first render. The fix and the alternatives are in [core_protocol.md](core_protocol.md#expect-a-template-path-problem-on-the-first-run); settle it before Construction, because it blocks every route that renders a page.
+- **The app is created as `Flask(__name__, template_folder='../../templates', static_folder='../../static')`.** The baseline passed a display string where Flask expects an import name, so Flask looked for `templates/` and `static/` in the working directory and raised `TemplateNotFound`. The explicit folders point at the repo root from `src/app/`, and the Dockerfile copies both beside `src/` to match. Background: [core_protocol.md](core_protocol.md#the-template-path-fix).
 
-- **`app.secret_key = 'You will never know!'`** is a placeholder. Read it from the environment with a development fallback:
+- **`app.secret_key`** is read from the environment with a development fallback:
   ```python
   app.secret_key = os.environ.get('SECRET_KEY', 'dev-only-not-for-delivery')
   ```
-  The Dockerfile and the run instructions then pass a real value. A hardcoded key in a public repo is a finding a grader can see.
+  The Dockerfile and the run instructions pass a real value. A hardcoded key in a public repo is a finding a grader can see.
 - **`db.create_all()`** runs at import. That is fine for SQLite here, but it means a model change needs the database deleted and `init_db.py` re-run; it will not migrate an existing file.
 
 ---
