@@ -92,7 +92,7 @@ The definition of done for the whole project. Keep the status column current; `/
 | +10 | Create enrollment | Construction | not started |
 | +10 | Delete enrollment | Construction | not started |
 | +10 | GPA calculation and display | Construction | not started |
-| +10 | GPA PyPI build and deployment | Deployment | in progress |
+| +10 | GPA PyPI build and deployment | Deployment | done |
 | +5 | Testing (manual test report) | Construction | not started |
 | +5 | Deployment (Dockerfile) | Deployment | not started |
 | **-25** | **Team/self evaluation not submitted** | any | **outstanding** |
