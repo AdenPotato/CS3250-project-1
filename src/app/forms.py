@@ -7,19 +7,20 @@ Description: Homework 03 - Forms for the User Authentication Web App
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, SelectField, SubmitField, validators
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, EqualTo, Length
 
 class SignUpForm(FlaskForm):
     id = StringField('Id', validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
     about = TextAreaField('About')
-    passwd = PasswordField('Password', validators=[DataRequired()])
-    passwd_confirm = PasswordField('Confirm Password', validators=[DataRequired()])
+    # bcrypt rejects passwords over 72 bytes, so the form stops them first
+    passwd = PasswordField('Password', validators=[DataRequired(), Length(max=72)])
+    passwd_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('passwd', message='Passwords must match.')])
     submit = SubmitField('Confirm')
 
 class LoginForm(FlaskForm):
     id = StringField('Id', validators=[DataRequired()])
-    passwd = PasswordField('Password', validators=[DataRequired()])
+    passwd = PasswordField('Password', validators=[DataRequired(), Length(max=72)])
     submit = SubmitField('Confirm')
 
 GRADE_CHOICES = [

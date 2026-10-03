@@ -1,9 +1,22 @@
 {% extends 'base.html' %}
 {% block main %}
+        <h1>{{ title }}</h1>
         <form action="" method="POST" novalidate>
             {{ form.hidden_tag() }}
-            <p>{{ form.id.label }} <br> {{ form.id(size=15) }}</p>
-            <p>{{ form.passwd.label }} <br> {{ form.passwd(size=30) }}</p>
+            {% if error %}
+                <p><span class="error">{{ error }}</span></p>
+            {% endif %}
+            <p>{{ form.id.label }} <br> {{ form.id(size=15) }}
+                {% for error in form.id.errors %}
+                    <br><span class="error">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>{{ form.passwd.label }} <br> {{ form.passwd(size=30) }}
+                {% for error in form.passwd.errors %}
+                    <br><span class="error">{{ error }}</span>
+                {% endfor %}
+            </p>
             <p>{{ form.submit() }}</p>
         </form>
+        <p>No account yet? <a href="{{ url_for('signup') }}">Sign Up</a></p>
 {% endblock %}

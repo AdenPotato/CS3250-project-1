@@ -30,21 +30,17 @@ python init_db.py                  # load the course catalog (run once, after a 
 
 The database lands at `src/instance/prj1.db`. It is disposable: delete it and re-run `init_db.py` whenever the model changes. It is never committed.
 
-### Expect a template path problem on the first run
+### The template path fix
 
-The baseline creates the app as `Flask("GPA Calculator Web App")` rather than `Flask(__name__)`. That string is not an importable module, so Flask cannot locate a package directory for it and falls back to the **current working directory** as the application root. Templates and static files are then looked for under wherever you launched the process.
+The baseline created the app as `Flask("GPA Calculator Web App")` rather than `Flask(__name__)`. That string is not an importable module, so Flask fell back to the **current working directory** as the application root, looked for `src/templates/`, and raised `TemplateNotFound` on the first page - confirmed on 2026-10-03.
 
-Meanwhile `templates/` and `static/` sit at the **repo root**, a level above `src/`. So `cd src && flask --app app run` will look for `src/templates/` and raise `TemplateNotFound` on the first page that renders one.
+`templates/` and `static/` sit at the **repo root**, a level above `src/`, and the assignment prints that tree. So the fix keeps the tree and passes explicit folders:
 
-Confirm this on the first run rather than taking it on faith, then fix it once, deliberately, and tell the team which way you went:
+```python
+app = Flask(__name__, template_folder='../../templates', static_folder='../../static')
+```
 
-| Fix | Cost |
-|---|---|
-| Pass explicit folders: `Flask(__name__, template_folder='../../templates', static_folder='../../static')` | One line, keeps the assignment's directory tree exactly as specified. **Preferred.** |
-| Move `templates/` and `static/` under `src/` | Cleanest Flask layout, but it departs from the tree the assignment prints. |
-| Always launch from the repo root with `src` on `PYTHONPATH` | No code change, but every teammate and the Dockerfile must remember it. Fragile. |
-
-Whatever you pick, the Dockerfile has to match it ([docker.md](../deployment/docker.md)). Settle this before Construction gets going - it blocks every template-rendering route, which is nearly all of them.
+The paths are relative to `src/app/`, so the app renders no matter where it is launched from. The Dockerfile copies `templates/` and `static/` to `/app/templates` and `/app/static`, beside `/app/src`, to match ([docker.md](../deployment/docker.md)). Do not move either folder without changing both.
 
 ---
 
