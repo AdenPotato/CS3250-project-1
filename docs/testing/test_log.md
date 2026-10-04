@@ -36,6 +36,13 @@ The 2026-10-03 15:01 rows were run on branch `11-aden-auth-routes` as HTTP reque
 
 The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` against a copy of the app with an empty database, the 20:00 rows the same way as the 15:01 ones. A browser pass over the populated list, with rows made on the create page, is still owed once #13 lands.
 
+ Functionality Tested | Date | Time | Tester | Result | Notes |
+| #13 create enrollment/update grade (Data Load Verification) | 10.04.26| 10:22| Isabella Eaton| passed |
+ Navigated to `/enrollments/create` after running database setup (`init_db.py`). Inspect the Course dropdown list. Every loaded course (all 8) appears as an option labeled `PREFIX NUMBER - Name` (e.g., `CS 3250 - Software Development Methods and Tools`).|
+| #13 create enrollment/update grade (Create Enrollment) | 10.04.26| 10:25| Isabella Eaton| passed | 1. Log in.<br>2. Go to `/enrollments/create`.<br>3. Pick an unenrolled course and select grade `A`.<br>4. Click Submit. Form posts with valid CSRF token; creates a new `Enrollment` row for `current_user`; redirects to `/enrollments` with the new course and grade displayed.|
+| #13 create enrollment/update grade (Update Enrollment) | 10.04.26| 10:27|Isabella Eaton | Passed| 1. Go to `/enrollments/create`.<br>2. Pick the same course used in TC-ENROLL-02.<br>3. Select grade `B+`.<br>4. Click Submit. | Existing record is updated to `B+` without raising an `IntegrityError` / primary key conflict; redirects to `/enrollments` with updated grade `B+`.|
+
+
 Result is `passed` or `failed`. A `failed` row **stays in the table** - delete nothing. When it is fixed, add a new row for the retest and reference the failure. A log with no failures in it reads as a log nobody actually used.
 
 ---
@@ -70,14 +77,14 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 ### R4 - Update a grade
 
-- [ ] Creating an enrollment for a course already held updates the grade instead of erroring
+- [x] Creating an enrollment for a course already held updates the grade instead of erroring
 - [ ] The list and the GPA both reflect the new grade
 
 ### R5 - Delete an enrollment
 
 - [x] Delete removes the row from the list
 - [ ] The GPA recomputes after delete
-- [ ] The course still exists afterwards and can be enrolled in again
+- [x] The course still exists afterwards and can be enrolled in again
 
 ### Data load
 
