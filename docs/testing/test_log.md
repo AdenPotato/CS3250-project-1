@@ -43,6 +43,8 @@ The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` aga
 | #13 create enrollment/update grade (Update Enrollment) | 10.04.26| 10:27|Isabella Eaton | Passed| 1. Go to `/enrollments/create`.<br>2. Pick the same course used in TC-ENROLL-02.<br>3. Select grade `B+`.<br>4. Click Submit. | Existing record is updated to `B+` without raising an `IntegrityError` / primary key conflict; redirects to `/enrollments` with updated grade `B+`.|
 
 
+
+
 Result is `passed` or `failed`. A `failed` row **stays in the table** - delete nothing. When it is fixed, add a new row for the retest and reference the failure. A log with no failures in it reads as a log nobody actually used.
 
 ---
