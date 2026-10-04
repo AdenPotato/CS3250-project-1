@@ -49,6 +49,16 @@ Then open `http://localhost:5000`.
 
 `/deliver` runs this and checks the app answers.
 
+### A prebuilt image
+
+Not required by the assignment - the instructor builds from the Dockerfile. As a convenience, `.github/workflows/docker.yml` pushes a built image to GitHub's container registry on every push to `main` and on every published release, tagged with the release's tag name:
+
+```
+docker run --rm -p 5000:5000 ghcr.io/adenpotato/cs3250-project-1:<release tag>
+```
+
+`latest` moves on `main` and on full releases, not on pre-releases. Publish the release by hand - one created by a workflow does not trigger the build.
+
 ---
 
 ## Before you call it delivered
