@@ -1,6 +1,7 @@
 # Builds the Docker image on every PR into dev or main, so a Dockerfile that breaks on a clean
-# checkout fails the PR instead of the grader's build. Pushes the image to GHCR on main, and on
-# every published release under the release's tag name.
+# checkout fails the PR instead of the grader's build. Every push to dev publishes a pre-release
+# named dev-<run number> with its image on GHCR. Pushes to main, and releases published by hand,
+# push an image too.
 name: Docker image
 
 on:
@@ -16,10 +17,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      # write, so the dev build can create its tag and pre-release
+      contents: write
       packages: write
     env:
-      PUSH: ${{ github.event_name == 'release' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+      PUSH: ${{ github.event_name == 'release' || github.event_name == 'push' }}
+      # set only on a push to dev - that is the build that gets its own pre-release
+      RELEASE_TAG: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' && format('dev-{0}', github.run_number) || '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -44,6 +48,7 @@ jobs:
           flavor: latest=false
           tags: |
             type=ref,event=tag
+            type=raw,value=${{ env.RELEASE_TAG }},enable=${{ env.RELEASE_TAG != '' }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || (github.event_name == 'release' && !github.event.release.prerelease) }}
             type=raw,value=${{ github.sha }}
 
@@ -65,3 +70,21 @@ jobs:
             echo "${{ steps.meta.outputs.tags }}"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      # runs last, so a pre-release never points at an image that failed to build or push
+      - name: Publish the dev pre-release
+        if: env.RELEASE_TAG != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > notes.md <<EOF
+          Automatic pre-release of \`dev\` at ${GITHUB_SHA::7}. Run it with:
+
+          \`\`\`
+          docker run --rm -p 5000:5000 $IMAGE:$RELEASE_TAG
+          \`\`\`
+
+          Then open http://localhost:5000.
+          EOF
+          gh release create "$RELEASE_TAG" --target "$GITHUB_SHA" --prerelease \
+            --title "Dev build $RELEASE_TAG" --notes-file notes.md --generate-notes
