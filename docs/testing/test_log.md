@@ -38,6 +38,7 @@ The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` aga
  Navigated to `/enrollments/create` after running database setup (`init_db.py`). Inspect the Course dropdown list. Every loaded course (all 8) appears as an option labeled `PREFIX NUMBER - Name` (e.g., `CS 3250 - Software Development Methods and Tools`).|
 | #13 create enrollment/update grade (Create Enrollment) | 10.04.26| 10:25| Isabella Eaton| passed | 1. Log in.<br>2. Go to `/enrollments/create`.<br>3. Pick an unenrolled course and select grade `A`.<br>4. Click Submit. Form posts with valid CSRF token; creates a new `Enrollment` row for `current_user`; redirects to `/enrollments` with the new course and grade displayed.|
 | #13 create enrollment/update grade (Update Enrollment) | 10.04.26| 10:27|Isabella Eaton | Passed| 1. Go to `/enrollments/create`.<br>2. Pick the same course used in TC-ENROLL-02.<br>3. Select grade `B+`.<br>4. Click Submit. | Existing record is updated to `B+` without raising an `IntegrityError` / primary key conflict; redirects to `/enrollments` with updated grade `B+`.|
+| Delete an enrollment - GPA recomputes | 2026-10-04 | 14:59 | Johnny De La Garza | passed | Branch `14-johnny-r5-gpa-check`, fresh database from `init_db.py`. Signed in as `johnny` and added CS 3250 (4 cr) A, MTH 2140 (2 cr) C, ENG 1010 (3 cr) B on the create page. GPA showed 3.22, matching (16+4+9)/9. Deleted MTH 2140; expected (16+9)/7 = 3.57 and the page showed 3.57. |
 | #17 Manual test log| 10.4.26| 15:20| Isabella| failed| docker was not updated, needed to update docker to showcase correct image with all project updates implemented.|
 | #17 Manual test log| 10.4.26| 15:41| Isabella| passed| test log updated, all program requirements met (R1-R5) thorugh manual testing.|
 | sign up with details and created an account sucessfully |15:49| passed|
@@ -120,9 +121,9 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 ### R5 - Delete an enrollment
 
-- [x] Delete removes the row from the list 
-- [x] The GPA recomputes after delete 
-- [x] The course still exists afterwards and can be enrolled in again 
+- [x] Delete removes the row from the list
+- [x] The GPA recomputes after delete
+- [x] The course still exists afterwards and can be enrolled in again
 
 ### Data load
 
