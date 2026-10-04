@@ -3,3 +3,4 @@ flask-wtf
 flask-sqlalchemy
 flask-login
 bcrypt
+GPA-Calculator-CS3250-aden==0.1.0

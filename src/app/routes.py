@@ -8,8 +8,7 @@ Description: Project 1 - GPA Calculator
 from app import app, db
 from app.models import User, Course, Enrollment
 from app.forms import SignUpForm, LoginForm, EnrollmentForm, DeleteEnrollmentForm
-# TODO
-# from gpa_calculator_xx import calculate_gpa
+from gpa_calculator import calculate_gpa
 from flask import render_template, redirect, url_for, request, abort
 from flask_login import login_required, login_user, logout_user, current_user
 import bcrypt
@@ -57,8 +56,27 @@ def signout():
 @login_required
 def list_enrollments():
     enrollments = sorted(current_user.enrollments, key=lambda e: (e.course_prefix, e.course_number))
-    # one form instance is enough - every row's delete button carries the same CSRF token
-    return render_template('enrollments.html', title='Enrollments', enrollments=enrollments, delete_form=DeleteEnrollmentForm())
+
+    # make the grade and credit data that calculate_gpa needs
+    gpa_data = [
+        {
+            'grade': enrollment.grade,
+            'credits': enrollment.course.credits
+        }
+        for enrollment in enrollments
+    ]
+
+    # calculate the students GPA from their enrollments
+    gpa = calculate_gpa(gpa_data)
+
+    # send the enrollments and GPA to the page
+    return render_template(
+        'enrollments.html',
+        title='Enrollments',
+        enrollments=enrollments,
+        delete_form=DeleteEnrollmentForm(),
+        gpa=gpa
+    )
 
 @app.route('/enrollments/delete/<course_prefix>/<course_number>', methods=['POST'])
 @login_required
