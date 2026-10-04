@@ -1,7 +1,7 @@
 '''
 CS3250 - Software Development Methods and Tools
 Instructor: Thyago Mota
-Student(s):
+Student(s): Aden Lytle, Johnny De La Garza, Isabella Eaton, Elijah Damian-Ortiz
 Description: Project 1 - GPA Calculator
 '''
 

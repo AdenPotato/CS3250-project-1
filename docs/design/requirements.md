@@ -42,7 +42,7 @@ Treat this as: **create and delete are the graded path, and update is a requirem
 ## Risks
 
 - **Limited team experience with the tooling.** The named risk in the assignment. Mitigation: the checkpoint happens early, and the riskiest unfamiliar piece - PyPI publishing - is started before the last week rather than left to the end. A PyPI account and an API token take a day to sort out if something goes wrong, and that is 10 points.
-- **The baseline is mostly stubs.** Six routes return "Work in progress...", `init_db.py` inserts nothing, and `calculate_gpa` returns 0. Nothing is partially done; everything is not started.
+- **The baseline was mostly stubs.** Six routes returned "Work in progress...", `init_db.py` inserted nothing, and `calculate_gpa` returned 0. All of it has since been built.
 - **The database does not migrate.** `db.create_all()` builds tables that do not exist and silently ignores a changed column. A model change late in the project means everyone deletes their database.
 
 ## Out of scope

@@ -6,7 +6,7 @@ The Planning phase deliverable. Two tables, worth 5 rubric points each, plus the
 
 ## Current phase
 
-**Planning** <- you are here
+**Deployment** <- you are here
 
 Advance it with `/phase`. Phases and their deliverables: [process_protocol.md](../protocol/process_protocol.md#phases).
 
@@ -14,15 +14,15 @@ Advance it with `/phase`. Phases and their deliverables: [process_protocol.md](.
 
 ## Schedule
 
-Three weeks, five phases. Fill in the dates - the template ships with `mm/dd/26` placeholders and `99 days`, and leaving them is a visible 5 points.
+Three weeks, five phases. The graded copy of this table is in the project [README](../../README.md#schedule); keep the two the same.
 
 | Phase | Task | Start | End | Duration | Deliverable |
 |---|---|---|---|---|---|
-| Modeling | Requirements Analysis | mm/dd/26 | mm/dd/26 | ? days | Use Case Diagram |
-| Modeling | Data Model | mm/dd/26 | mm/dd/26 | ? days | Class Diagram |
-| Construction | Coding | mm/dd/26 | mm/dd/26 | ? days | Code |
-| Construction | Testing | mm/dd/26 | mm/dd/26 | ? days | Test Report |
-| Deployment | Delivery | mm/dd/26 | mm/dd/26 | ? days | Final Commit/Push |
+| Modeling | Requirements Analysis | 09/22/26 | 09/26/26 | 4 days | Use Case Diagram |
+| Modeling | Data Model | 09/22/26 | 09/26/26 | 4 days | Class Diagram |
+| Construction | Coding | 09/25/26 | 09/30/26 | 5 days | Code |
+| Construction | Testing | 09/25/26 | 09/30/26 | 5 days | Test Report |
+| Deployment | Delivery | 10/01/26 | 10/03/26 | 2 days | Final Commit/Push |
 
 ### Sequencing advice
 
@@ -48,10 +48,10 @@ Three to five members. One person may hold more than one role. Role definitions:
 
 | Name | Role(s) | GitHub |
 |---|---|---|
-| | manager | |
-| | developer | |
-| | tester | |
-| | documenter | |
+| Aden Lytle | manager, developer, tester, documenter | AdenPotato |
+| Johnny (Juan) De La Garza | developer, tester | jdelagar |
+| Isabella Eaton | tester, documenter | ellaevelynn |
+| Elijah Damian-Ortiz | developer, tester | damian-ortiz-elijah |
 
 Every member is a collaborator on the repo, and the repo URL goes in the project README for the instructor.
 
@@ -61,12 +61,12 @@ Every member is a collaborator on the repo, and the repo URL goes in the project
 
 | Item | Owner | Status |
 |---|---|---|
-| Public GitHub repo created, all members added | manager | not done |
-| Repo URL shared with instructor | manager | not done |
-| `dev` branch created | manager | not done |
-| `main` branch protected (**-5 if not**) | manager | not done |
-| Checkpoint scheduled | manager | not done |
-| Checkpoint held | manager | not done |
+| Public GitHub repo created, all members added | manager | done |
+| Repo URL shared with instructor | manager | done - in the README |
+| `dev` branch created | manager | done |
+| `main` branch protected (**-5 if not**) | manager | done - "Protect main" ruleset |
+| Checkpoint scheduled | manager | done |
+| Checkpoint held | manager | done - 2026-09-29, issue #9 |
 | Team/self evaluation submitted by **all** members (**-25 if not**) | everyone | not done |
 
 The two penalty rows are the cheapest points in the project. Clear them first.

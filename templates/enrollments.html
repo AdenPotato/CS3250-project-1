@@ -35,7 +35,7 @@
     <p>You have no enrollments yet. <a href="{{ url_for('create_enrollment') }}">Enter your first grade</a> to get started.</p>
     {% endif %}
     {% if gpa is defined %}
-    <p><strong>GPA:</strong> <span class="{{ 'low_gpa' if gpa < 2.5 else '' }}">{{ '%.2f' | format(gpa) }}</span></p>
+    <p><strong>GPA:</strong> <span class="{{ 'low_gpa' if enrollments and gpa < 2.5 else '' }}">{{ '%.2f' | format(gpa) }}</span></p>
     {% endif %}
     <button type="button" class="create_button" onclick=simple_action("{{ url_for('create_enrollment') }}")>Grade Entry</button>
     <button type="button" class="button" onclick=simple_action("{{ url_for('signout') }}")>Sign Out</button>

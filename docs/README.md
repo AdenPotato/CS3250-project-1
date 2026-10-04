@@ -44,6 +44,19 @@ The hub. This page links; the content lives in the leaf docs and is defined once
 
 ---
 
+## Wiki
+
+These docs are mirrored to the [GitHub wiki](https://github.com/AdenPotato/CS3250-project-1/wiki) for reading in the browser, with the UML diagrams on one page. **This folder is the source of truth** - the grader clones the repo and the wiki does not come with it, so edit here and re-sync.
+
+```
+git clone https://github.com/AdenPotato/CS3250-project-1.wiki.git ../CS3250-project-1.wiki
+python docs/sync_wiki.py ../CS3250-project-1.wiki
+```
+
+Then review, commit and push from inside the wiki clone. The script overwrites the mirrored pages, the sidebar and the footer, and leaves any other wiki page alone. A teammate pushes it - AI agents do not ([AGENTS.md](../AGENTS.md), rule 7).
+
+---
+
 ## Skills
 
 Slash commands, in `.claude/skills/<name>/SKILL.md`, mirrored in `.agents/skills/` for other AI tools.
@@ -83,6 +96,7 @@ docs/
   testing/             test_log.md (the graded manual test table)
   deployment/          docker.md (build, run, final checklist)
   changelog.md         newest-first work log
+  sync_wiki.py         mirrors this folder into a clone of the GitHub wiki
 .claude/
   agents/              app, ui, release
   skills/              13 slash commands

@@ -6,7 +6,7 @@ The delivery mechanism. The instructor builds the image and runs the app as a co
 
 ## The Dockerfile
 
-It goes in the repository root, and the repo does not have one yet. Shape:
+It is in the repository root:
 
 ```dockerfile
 FROM python:3.12-slim
@@ -35,7 +35,7 @@ Things that will bite:
 - **Templates and static live outside `src/`** in this layout, but Flask resolves them relative to the app's root path. Copy them so the tree inside the image matches the repo, and confirm a page actually renders in the container rather than assuming it.
 - **`requirements.txt` must list the published `gpa_calculator` distribution** once it is on PyPI, or the import fails at runtime in a way it never does on your machine, where the package is on the path.
 - **The database is created inside the container** and dies with it. That is acceptable here - `init_db.py` runs at startup, and the grader signs up fresh. If data should survive a restart, mount a volume over `/app/src/instance`.
-- **`.dockerignore`** keeps `.venv/`, `.git/`, `__pycache__/` and `instance/` out of the build context. Without it the build is slow and may copy a local database into the image.
+- **`.dockerignore`** keeps `.venv/`, `.git/`, `__pycache__/` and `instance/` out of the build context. Without it the build is slow and may copy a local database into the image. It also leaves out `src/gpa_calculator/`, because the app runs from `src/` and a local copy there would shadow the one pip installed from PyPI.
 - **Do not bake the secret key in.** Read it from the environment ([app_protocol.md](../protocol/app_protocol.md#the-app-object)) and pass it at run time: `-e SECRET_KEY=...`, with the dev fallback covering the grader who does not.
 
 ## Build and run
@@ -64,13 +64,13 @@ Test it the way the instructor will, which is not the way you have been testing 
 
 ## Final delivery checklist
 
-- [ ] Dockerfile and `.dockerignore` committed at the repo root
+- [x] Dockerfile and `.dockerignore` committed at the repo root
 - [ ] Fresh-clone build succeeds
 - [ ] Container runs and every requirement works in it
-- [ ] `gpa_calculator` published to PyPI and installed from there by `requirements.txt`
-- [ ] README states the repo URL, how to build and run, and the PyPI package name
-- [ ] UML diagrams committed as source and rendered images
-- [ ] Manual test log complete, failures and their retests included
+- [x] `gpa_calculator` published to PyPI and installed from there by `requirements.txt`
+- [x] README states the repo URL, how to build and run, and the PyPI package name
+- [x] UML diagrams committed as source and rendered images
+- [x] Manual test log complete, failures and their retests included
 - [ ] Screenshots in `pics/`
 - [ ] `dev` merged into protected `main`
 - [ ] All members submitted the team/self evaluation
