@@ -51,13 +51,15 @@ Then open `http://localhost:5000`.
 
 ### A prebuilt image
 
-Not required by the assignment - the instructor builds from the Dockerfile. As a convenience, `.github/workflows/docker.yml` pushes a built image to GitHub's container registry on every push to `main` and on every published release, tagged with the release's tag name:
+Not required by the assignment - the instructor builds from the Dockerfile. As a convenience, `.github/workflows/docker.yml` publishes built images to GitHub's container registry:
+
+- **Every push to `dev`** creates a pre-release on the Releases page named `dev-<run number>`, with the image tagged the same and the run command in its notes.
+- **Every push to `main`** moves `latest`.
+- **A release published by hand** gets an image tagged with the release's tag name, and moves `latest` unless it is a pre-release.
 
 ```
-docker run --rm -p 5000:5000 ghcr.io/adenpotato/cs3250-project-1:<release tag>
+docker run --rm -p 5000:5000 ghcr.io/adenpotato/cs3250-project-1:<tag>
 ```
-
-`latest` moves on `main` and on full releases, not on pre-releases. Publish the release by hand - one created by a workflow does not trigger the build.
 
 ---
 
