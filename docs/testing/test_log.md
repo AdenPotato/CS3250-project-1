@@ -33,17 +33,53 @@ Add rows with `/test-log`.
 | Delete leaves the course in the catalog | 2026-10-03 | 21:50 | Johnny De La Garza | passed | After both deletes, queried the Course table. Expected CS 3250 and MTH 1410 to still exist; both were listed. Re-enrolling could not be tried yet because the add-grade page (create enrollment) is not built. |
 | GPA with no enrollments | 2026-10-04 | 12:28 | Elijah Ortiz | passed | Signed up with a new account and opened `/enrollments` with no enrollments. Expected GPA 0.00 and the page displayed GPA: 0.00. |
 The 2026-10-03 15:01 rows were run on branch `11-aden-auth-routes` as HTTP requests against the dev server (`flask --app app run`), reading the returned status, redirect and page text. Nothing was looked at in a browser, so the page layout is not covered by them.
-
 The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` against a copy of the app with an empty database, the 20:00 rows the same way as the 15:01 ones. A browser pass over the populated list, with rows made on the create page, is still owed once #13 lands.
-
- Functionality Tested | Date | Time | Tester | Result | Notes |
 | #13 create enrollment/update grade (Data Load Verification) | 10.04.26| 10:22| Isabella Eaton| passed |
  Navigated to `/enrollments/create` after running database setup (`init_db.py`). Inspect the Course dropdown list. Every loaded course (all 8) appears as an option labeled `PREFIX NUMBER - Name` (e.g., `CS 3250 - Software Development Methods and Tools`).|
 | #13 create enrollment/update grade (Create Enrollment) | 10.04.26| 10:25| Isabella Eaton| passed | 1. Log in.<br>2. Go to `/enrollments/create`.<br>3. Pick an unenrolled course and select grade `A`.<br>4. Click Submit. Form posts with valid CSRF token; creates a new `Enrollment` row for `current_user`; redirects to `/enrollments` with the new course and grade displayed.|
 | #13 create enrollment/update grade (Update Enrollment) | 10.04.26| 10:27|Isabella Eaton | Passed| 1. Go to `/enrollments/create`.<br>2. Pick the same course used in TC-ENROLL-02.<br>3. Select grade `B+`.<br>4. Click Submit. | Existing record is updated to `B+` without raising an `IntegrityError` / primary key conflict; redirects to `/enrollments` with updated grade `B+`.|
+| #17 Manual test log| 10.4.26| 15:20| Isabella| failed| docker was not updated, needed to update docker to showcase correct image with all project updates implemented.|
+| #17 Manual test log| 10.4.26| 15:41| Isabella| passed| test log updated, all program requirements met (R1-R5) thorugh manual testing.|
+| sign up with details and created an account sucessfully |15:49| passed|
+additional requirements shown in coverage cheklist, all passed easily with no error after fixing docker issue, ran in Chrome browser|
+| Sign up with valid details creates the account|IE |10.4.26| 15:49|passed|
+| Sign up with a duplicate id is rejected with a message |IE |10.4.26| 15:49|passed|
+| Sign up with mismatched passwords is rejected |IE |10.4.26| 15:49|passed|
+| Sign in with correct credentials reaches the enrollments page |IE |10.4.26| 15:49|passed|
+| Sign in with a wrong password is rejected, and the message does not reveal which field was wrong |IE |10.4.26| 15:51|passed|
+| Sign in with an unknown id is rejected the same way |IE |10.4.26| 15:51|passed|
+| Sign out ends the session; going back to `/enrollments` redirects to login |IE |10.4.26| 15:51|passed|
+| A new account sees the empty state, not a bare table |IE |10.4.26| 15:51|passed|
+| After creating enrollments, all of them are listed with prefix, number, name, credits and grade |IE |10.4.26| 15:55|passed|
+| Signed in as a second student, only that student's enrollments appear |IE |10.4.26| 15:55|passed|
+| GPA shows on the enrollments page to two decimals |IE |10.4.26| 15:56|passed|
+| GPA matches a hand calculation for a known set (write the arithmetic in Notes) |IE |10.4.26| 15:56|passed|
+notes for R3 view gpa arithmetic 
+((grade)x(weight))+((grade)x(weight))....=gpa
+weight== numberof courses registered/100= % weight per class (assuming even weight)
+((4.0)x(.25))+((3.0)x(.25))+((2.0)x(.25))+((1.0)x(.25))=2.50, matches app result for gpa
+for uneven courses 
+arithmetic: total quality points (credit)/total credit hours
+quality points: grade X credit houts|
+| GPA with no enrollments is 0.00, not an error |IE |10.4.26| 15:56|passed|
+| Credit weighting is visible: a 4-credit A and a 1-credit F differ from the unweighted average |IE |10.4.26| 16:00|passed|
+| An A+ can push the GPA above 4.00 |IE |10.4.26| 16:00|passed|
+| Creating an enrollment for a course already held updates the grade instead of erroring |IE |10.4.26| 16:00|passed|
+| The list and the GPA both reflect the new grade |IE |10.4.26| 16:00|passed|
+| Delete removes the row from the list |IE |10.4.26| 16:00|passed|
+| The GPA recomputes after delete |IE |10.4.26| 16:00|passed|
+| The course still exists afterwards and can be enrolled in again |IE |10.4.26| 16:00|passed|
+| Every loaded course appears in the create-enrollment dropdown |IE |10.4.26| 16:02|passed|
+| 'enrollments`, `/enrollments/create` and delete all redirect to login when signed out |IE |10.4.26| 16:00|passed|
+| Editing the delete URL to another student's course does not delete their enrollment |10.4.26| 16:00|passed|
+| The database holds a bcrypt hash, not a plaintext password (check with `sqlite3` or a viewer)
 
 
+### Deployment
 
+- [x] `docker build` succeeds from a clean clone |IE |10.4.26| 16:03|passed|
+- [x] The container runs and the app is reachable on the mapped port |IE |10.4.26| 16:03|passed|
+- [ ] `pip install <dist-name>` from PyPI works in a clean venv, and `calculate_gpa` imports and runs
 
 Result is `passed` or `failed`. A `failed` row **stays in the table** - delete nothing. When it is fixed, add a new row for the retest and reference the failure. A log with no failures in it reads as a log nobody actually used.
 
@@ -56,54 +92,54 @@ Every requirement needs at least one row before delivery. Tick these off against
 ### R1 - Authentication
 
 - [x] Sign up with valid details creates the account
-- [x] Sign up with a duplicate id is rejected with a message
-- [x] Sign up with mismatched passwords is rejected
-- [x] Sign in with correct credentials reaches the enrollments page
-- [x] Sign in with a wrong password is rejected, and the message does not reveal which field was wrong
-- [x] Sign in with an unknown id is rejected the same way
-- [x] Sign out ends the session; going back to `/enrollments` redirects to login
+- [x] Sign up with a duplicate id is rejected with a message 
+- [x] Sign up with mismatched passwords is rejected 
+- [x] Sign in with correct credentials reaches the enrollments page 
+- [x] Sign in with a wrong password is rejected, and the message does not reveal which field was wrong 
+- [x] Sign in with an unknown id is rejected the same way |IE 
+- [x] Sign out ends the session; going back to `/enrollments` redirects to login 
 
 ### R2 - View enrollments
 
-- [x] A new account sees the empty state, not a bare table
-- [x] After creating enrollments, all of them are listed with prefix, number, name, credits and grade
-- [x] Signed in as a second student, only that student's enrollments appear
+- [x] A new account sees the empty state, not a bare table 
+- [x] After creating enrollments, all of them are listed with prefix, number, name, credits and grade 
+- [x] Signed in as a second student, only that student's enrollments appear 
 
 ### R3 - View GPA
 
-- [ ] GPA shows on the enrollments page to two decimals
-- [ ] GPA matches a hand calculation for a known set (write the arithmetic in Notes)
-- [x] GPA with no enrollments is 0.00, not an error
-- [ ] Credit weighting is visible: a 4-credit A and a 1-credit F differ from the unweighted average
-- [ ] An A+ can push the GPA above 4.00
+- [x] GPA shows on the enrollments page to two decimals 
+- [x] GPA matches a hand calculation for a known set (write the arithmetic in Notes) 
+- [x] GPA with no enrollments is 0.00, not an error 
+- [x] Credit weighting is visible: a 4-credit A and a 1-credit F differ from the unweighted average 
+- [x] An A+ can push the GPA above 4.00 
 
 ### R4 - Update a grade
 
-- [x] Creating an enrollment for a course already held updates the grade instead of erroring
-- [ ] The list and the GPA both reflect the new grade
+- [x] Creating an enrollment for a course already held updates the grade instead of erroring 
+- [x] The list and the GPA both reflect the new grade 
 
 ### R5 - Delete an enrollment
 
-- [x] Delete removes the row from the list
-- [ ] The GPA recomputes after delete
-- [x] The course still exists afterwards and can be enrolled in again
+- [x] Delete removes the row from the list 
+- [x] The GPA recomputes after delete 
+- [x] The course still exists afterwards and can be enrolled in again 
 
 ### Data load
 
-- [x] `python init_db.py` loads at least 5 courses
-- [x] Running it a second time does not crash
-- [ ] Every loaded course appears in the create-enrollment dropdown
+- [x] `python init_db.py` loads at least 5 courses 
+- [x] Running it a second time does not crash 
+- [x] Every loaded course appears in the create-enrollment dropdown 
 
 ### Security
 
-- [x] `/enrollments`, `/enrollments/create` and delete all redirect to login when signed out
-- [ ] Editing the delete URL to another student's course does not delete their enrollment
-- [ ] The database holds a bcrypt hash, not a plaintext password (check with `sqlite3` or a viewer)
+- [x] `/enrollments`, `/enrollments/create` and delete all redirect to login when signed out 
+- [x] Editing the delete URL to another student's course does not delete their enrollment 
+- [x] The database holds a bcrypt hash, not a plaintext password (check with `sqlite3` or a viewer)
 
 ### Deployment
 
-- [x] `docker build` succeeds from a clean clone
-- [x] The container runs and the app is reachable on the mapped port
+- [x] `docker build` succeeds from a clean clone 
+- [x] The container runs and the app is reachable on the mapped port 
 - [ ] `pip install <dist-name>` from PyPI works in a clean venv, and `calculate_gpa` imports and runs
 
 ---
