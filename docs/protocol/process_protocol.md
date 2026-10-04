@@ -90,7 +90,7 @@ The definition of done for the whole project. Keep the status column current; `/
 | +5 | Authentication (signup, login, signout) | Construction | in progress |
 | +10 | List of enrollments | Construction | in progress |
 | +10 | Create enrollment | Construction | not started |
-| +10 | Delete enrollment | Construction | not started |
+| +10 | Delete enrollment | Construction | done |
 | +10 | GPA calculation and display | Construction | not started |
 | +10 | GPA PyPI build and deployment | Deployment | done |
 | +5 | Testing (manual test report) | Construction | not started |

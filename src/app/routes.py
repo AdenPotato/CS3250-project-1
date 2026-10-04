@@ -10,7 +10,7 @@ from app.models import User, Course, Enrollment
 from app.forms import SignUpForm, LoginForm, EnrollmentForm, DeleteEnrollmentForm
 # TODO
 # from gpa_calculator_xx import calculate_gpa
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, abort
 from flask_login import login_required, login_user, logout_user, current_user
 import bcrypt
 
@@ -60,11 +60,18 @@ def list_enrollments():
     # one form instance is enough - every row's delete button carries the same CSRF token
     return render_template('enrollments.html', title='Enrollments', enrollments=enrollments, delete_form=DeleteEnrollmentForm())
 
-# TODO
 @app.route('/enrollments/delete/<course_prefix>/<course_number>', methods=['POST'])
 @login_required
 def delete_enrollment(course_prefix, course_number):
-    return "Work in progress..."
+    form = DeleteEnrollmentForm()
+    if not form.validate_on_submit():
+        abort(400)
+    enrollment = db.session.get(Enrollment, (current_user.id, course_prefix, course_number))
+    if enrollment is None:
+        abort(404)
+    db.session.delete(enrollment)
+    db.session.commit()
+    return redirect(url_for('list_enrollments'))
 
 # TODO
 @app.route('/enrollments/create', methods=['GET', 'POST'])

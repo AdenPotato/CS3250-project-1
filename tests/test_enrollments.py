@@ -85,3 +85,44 @@ def test_user_id_in_the_query_string_is_ignored(client):
     login(client, 'bob')
     html = client.get('/enrollments?user_id=alice').text
     assert 'Software Development Methods and Tools' not in html
+
+
+# R5 - delete enrollment
+
+def test_delete_removes_enrollment_and_redirects(client):
+    add_user('alice')
+    add_course('CS', '3250', 'Software Development Methods and Tools', 4)
+    enroll('alice', 'CS', '3250', 'A')
+    login(client, 'alice')
+    response = client.post('/enrollments/delete/CS/3250')
+    assert response.status_code == 302
+    assert response.headers['Location'].endswith('/enrollments')
+    assert db.session.get(Enrollment, ('alice', 'CS', '3250')) is None
+
+
+
+def test_delete_leaves_course_in_catalog(client):
+    add_user('alice')
+    add_course('CS', '3250', 'Software Development Methods and Tools', 4)
+    enroll('alice', 'CS', '3250', 'A')
+    login(client, 'alice')
+    client.post('/enrollments/delete/CS/3250')
+    assert db.session.get(Course, ('CS', '3250')) is not None
+
+
+def test_student_cannot_delete_another_students_enrollment(client):
+    add_user('alice')
+    add_user('bob')
+    add_course('CS', '3250', 'Software Development Methods and Tools', 4)
+    enroll('bob', 'CS', '3250', 'B')
+    login(client, 'alice')
+    response = client.post('/enrollments/delete/CS/3250')
+    assert response.status_code == 404
+    assert db.session.get(Enrollment, ('bob', 'CS', '3250')) is not None
+
+
+def test_delete_missing_enrollment_returns_404(client):
+    add_user('alice')
+    login(client, 'alice')
+    response = client.post('/enrollments/delete/XX/0000')
+    assert response.status_code == 404
