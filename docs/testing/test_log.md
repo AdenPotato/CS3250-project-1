@@ -83,7 +83,7 @@ Every requirement needs at least one row before delivery. Tick these off against
 ### R5 - Delete an enrollment
 
 - [x] Delete removes the row from the list
-- [X] The GPA recomputes after delete
+- [x] The GPA recomputes after delete
 - [x] The course still exists afterwards and can be enrolled in again
 
 ### Data load
