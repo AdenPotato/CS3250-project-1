@@ -24,11 +24,16 @@ Add rows with `/test-log`.
 | Sign out ends the session | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | GET `/users/signout` while signed in. Expected the landing page and a dead session; got 302 to `/index.html`, then `/enrollments` redirected to `/users/login?next=%2Fenrollments`. A second student signed in from another session stayed signed in. |
 | Enrollments page for a new account - empty state | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | Signed in as the new `qa150112`. Expected a sentence and a link, not a bare table; got 200 with "You have no enrollments yet.", a link to `/enrollments/create`, and no table. No GPA line yet - that is #16. |
 | Signed-out access to protected routes | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | With no session: GET `/enrollments`, GET `/enrollments/create`, POST `/enrollments/delete/CS/3250`, GET `/users/signout`. Expected a redirect to login for each; all four returned 302 to `/users/login?next=...`. |
+| Course load on an empty database | 2026-10-03 | 19:59 | Claude Code (command line) | passed | Fresh copy of `src/` with no `instance/` folder, then `python init_db.py`. Expected the tables created and 5 or more courses loaded; it printed "Loaded 8 courses, 8 in the catalog." and exited 0. A query afterwards returned all 8 with prefix, number, name and credits. |
+| Course load run a second time | 2026-10-03 | 19:59 | Claude Code (command line) | passed | `python init_db.py` again on the same database. Expected no primary-key error and no duplicates; it printed "Loaded 0 courses, 8 in the catalog." and exited 0. |
+| Enrollments page lists every enrollment | 2026-10-03 | 20:00 | Claude Code (HTTP requests, no browser) | passed | Fresh database. Signed up `qa_ana`, gave her MTH 2140 B+, CS 3250 A- and ENG 1010 C. Expected three rows with prefix, number, name, credits and grade; got 200 with CS 3250 / Software Development Methods and Tools / 4 / A-, ENG 1010 / Composing Arguments / 3 / C, MTH 2140 / Computational Matrix Algebra / 2 / B+, sorted by prefix and number, each with a delete form to its own course and a CSRF token, and no empty-state sentence. The enrollments were inserted through the `Enrollment` model, not the create page - that page is still a stub (#13). |
+| Second student sees only their own enrollments | 2026-10-03 | 20:00 | Claude Code (HTTP requests, no browser) | passed | Same database, `qa_ben` signed in from a separate session with CS 1050 A and CS 3250 D+ (inserted the same way). Expected two rows and none of `qa_ana`'s; got 200 with exactly CS 1050 A and CS 3250 D+ - his own D+ on the shared course, not her A-. `/enrollments?user_id=qa_ana` returned the same two rows. |
 | Delete an enrollment - row removed | 2026-10-03 | 21:50 | Johnny De La Garza | passed | Branch `14-johnny-delete-enrollment`, Firefox. Signed in as `johnny` with CS 3250 and MTH 1410 enrolled. Clicked Delete on CS 3250 and confirmed. Expected a return to the list without that row; got `/enrollments` with only MTH 1410 left. |
 | Delete the last enrollment - empty state returns | 2026-10-03 | 21:50 | Johnny De La Garza | passed | Deleted MTH 1410, the only remaining row. Expected the empty state; got "You have no enrollments yet." with no table. |
 | Delete leaves the course in the catalog | 2026-10-03 | 21:50 | Johnny De La Garza | passed | After both deletes, queried the Course table. Expected CS 3250 and MTH 1410 to still exist; both were listed. Re-enrolling could not be tried yet because the add-grade page (create enrollment) is not built. |
-
 The 2026-10-03 15:01 rows were run on branch `11-aden-auth-routes` as HTTP requests against the dev server (`flask --app app run`), reading the returned status, redirect and page text. Nothing was looked at in a browser, so the page layout is not covered by them.
+
+The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` against a copy of the app with an empty database, the 20:00 rows the same way as the 15:01 ones. A browser pass over the populated list, with rows made on the create page, is still owed once #13 lands.
 
 Result is `passed` or `failed`. A `failed` row **stays in the table** - delete nothing. When it is fixed, add a new row for the retest and reference the failure. A log with no failures in it reads as a log nobody actually used.
 
@@ -51,8 +56,8 @@ Every requirement needs at least one row before delivery. Tick these off against
 ### R2 - View enrollments
 
 - [x] A new account sees the empty state, not a bare table
-- [ ] After creating enrollments, all of them are listed with prefix, number, name, credits and grade
-- [ ] Signed in as a second student, only that student's enrollments appear
+- [x] After creating enrollments, all of them are listed with prefix, number, name, credits and grade
+- [x] Signed in as a second student, only that student's enrollments appear
 
 ### R3 - View GPA
 
@@ -75,8 +80,8 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 ### Data load
 
-- [ ] `python init_db.py` loads at least 5 courses
-- [ ] Running it a second time does not crash
+- [x] `python init_db.py` loads at least 5 courses
+- [x] Running it a second time does not crash
 - [ ] Every loaded course appears in the create-enrollment dropdown
 
 ### Security
