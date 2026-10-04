@@ -2,6 +2,8 @@
 
 <!-- Newest entry first. Format rules are at the bottom of this file. -->
 
+Work after 2026-09-22 is tracked in the [closed issues](https://github.com/AdenPotato/CS3250-project-1/issues?q=is%3Aissue+is%3Aclosed) and [merged pull requests](https://github.com/AdenPotato/CS3250-project-1/pulls?q=is%3Apr+is%3Amerged), one issue per rubric item, rather than in entries here.
+
 ---
 
 2026-09-22 14:30 MDT

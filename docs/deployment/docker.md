@@ -66,12 +66,12 @@ Test it the way the instructor will, which is not the way you have been testing 
 
 - [x] Dockerfile and `.dockerignore` committed at the repo root
 - [ ] Fresh-clone build succeeds
-- [ ] Container runs and every requirement works in it
+- [x] Container runs and every requirement works in it
 - [x] `gpa_calculator` published to PyPI and installed from there by `requirements.txt`
 - [x] README states the repo URL, how to build and run, and the PyPI package name
 - [x] UML diagrams committed as source and rendered images
 - [x] Manual test log complete, failures and their retests included
-- [ ] Screenshots in `pics/`
+- [x] Screenshots in `pics/`
 - [ ] `dev` merged into protected `main`
 - [ ] All members submitted the team/self evaluation
 

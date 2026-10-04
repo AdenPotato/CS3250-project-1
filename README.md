@@ -201,6 +201,9 @@ At this stage, you are NOT expected to write automated tests. Instead, you shoul
 |Create page links back to the enrollments list|10/04/26|17:12|passed|
 |New account's GPA 0.00 is not shown as a low-GPA warning|10/04/26|17:12|passed|
 |Full R1-R5 pass with the library imported from PyPI|10/04/26|17:12|passed|
+|Deployment - `docker build --no-cache` on branch `28-aden-final-validation`|10/04/26|17:21|passed|
+|Deployment - container imports `gpa_calculator` from PyPI|10/04/26|17:22|passed|
+|Deployment - full R1-R5 pass against the running container|10/04/26|17:22|passed|
 
 The full log, with the tester and the notes for each row, is in [docs/testing/test_log.md](docs/testing/test_log.md). The 10/03/26 15:01 rows were run as HTTP requests against the dev server, not in a browser.
 
@@ -240,6 +243,20 @@ python -c "from gpa_calculator import calculate_gpa; print(calculate_gpa([{'grad
 ```
 
 `requirements.txt` installs it from PyPI, and the Docker image uses that copy. The source is in [src/gpa_calculator](src/gpa_calculator), and the proof of a clean install is in [pics/gpa_lib_test.png](pics/gpa_lib_test.png).
+
+## Screenshots
+
+The delivered app, running in the Docker container.
+
+![landing page](pics/entry-page.png)
+
+![sign up page](pics/sign-up-page.png)
+
+![login page](pics/login-page.png)
+
+![grade entry page](pics/grade-entry-page.png)
+
+![enrollments page with the GPA](pics/Enrollments-page.png)
 
 # Team Evaluation 
 
