@@ -28,7 +28,9 @@ Add rows with `/test-log`.
 | Course load run a second time | 2026-10-03 | 19:59 | Claude Code (command line) | passed | `python init_db.py` again on the same database. Expected no primary-key error and no duplicates; it printed "Loaded 0 courses, 8 in the catalog." and exited 0. |
 | Enrollments page lists every enrollment | 2026-10-03 | 20:00 | Claude Code (HTTP requests, no browser) | passed | Fresh database. Signed up `qa_ana`, gave her MTH 2140 B+, CS 3250 A- and ENG 1010 C. Expected three rows with prefix, number, name, credits and grade; got 200 with CS 3250 / Software Development Methods and Tools / 4 / A-, ENG 1010 / Composing Arguments / 3 / C, MTH 2140 / Computational Matrix Algebra / 2 / B+, sorted by prefix and number, each with a delete form to its own course and a CSRF token, and no empty-state sentence. The enrollments were inserted through the `Enrollment` model, not the create page - that page is still a stub (#13). |
 | Second student sees only their own enrollments | 2026-10-03 | 20:00 | Claude Code (HTTP requests, no browser) | passed | Same database, `qa_ben` signed in from a separate session with CS 1050 A and CS 3250 D+ (inserted the same way). Expected two rows and none of `qa_ana`'s; got 200 with exactly CS 1050 A and CS 3250 D+ - his own D+ on the shared course, not her A-. `/enrollments?user_id=qa_ana` returned the same two rows. |
-
+| Delete an enrollment - row removed | 2026-10-03 | 21:50 | Johnny De La Garza | passed | Branch `14-johnny-delete-enrollment`, Firefox. Signed in as `johnny` with CS 3250 and MTH 1410 enrolled. Clicked Delete on CS 3250 and confirmed. Expected a return to the list without that row; got `/enrollments` with only MTH 1410 left. |
+| Delete the last enrollment - empty state returns | 2026-10-03 | 21:50 | Johnny De La Garza | passed | Deleted MTH 1410, the only remaining row. Expected the empty state; got "You have no enrollments yet." with no table. |
+| Delete leaves the course in the catalog | 2026-10-03 | 21:50 | Johnny De La Garza | passed | After both deletes, queried the Course table. Expected CS 3250 and MTH 1410 to still exist; both were listed. Re-enrolling could not be tried yet because the add-grade page (create enrollment) is not built. |
 The 2026-10-03 15:01 rows were run on branch `11-aden-auth-routes` as HTTP requests against the dev server (`flask --app app run`), reading the returned status, redirect and page text. Nothing was looked at in a browser, so the page layout is not covered by them.
 
 The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` against a copy of the app with an empty database, the 20:00 rows the same way as the 15:01 ones. A browser pass over the populated list, with rows made on the create page, is still owed once #13 lands.
@@ -72,7 +74,7 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 ### R5 - Delete an enrollment
 
-- [ ] Delete removes the row from the list
+- [x] Delete removes the row from the list
 - [ ] The GPA recomputes after delete
 - [ ] The course still exists afterwards and can be enrolled in again
 
