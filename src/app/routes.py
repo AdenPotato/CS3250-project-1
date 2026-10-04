@@ -73,8 +73,35 @@ def delete_enrollment(course_prefix, course_number):
     db.session.commit()
     return redirect(url_for('list_enrollments'))
 
-# TODO
 @app.route('/enrollments/create', methods=['GET', 'POST'])
 @login_required
 def create_enrollment():
-    return "Work in progress..."
+    form = EnrollmentForm()
+
+    # Populate course choices from the Course table: "PREFIX NUMBER - Name"
+    courses = db.session.scalars(db.select(Course).order_by(Course.prefix, Course.number)).all()
+    form.course.choices = [(f"{c.prefix}:{c.number}", f"{c.prefix} {c.number} - {c.name}") for c in courses]
+
+    if form.validate_on_submit():
+        prefix, number = form.course.data.split(':')
+
+        # Check if current_user already has an enrollment for this course (R4)
+        enrollment = db.session.get(Enrollment, (current_user.id, prefix, number))
+
+        if enrollment:
+            # Update grade on existing enrollment
+            enrollment.grade = form.grade.data
+        else:
+            # Create a new enrollment
+            enrollment = Enrollment(
+                user_id=current_user.id,
+                course_prefix=prefix,
+                course_number=number,
+                grade=form.grade.data
+            )
+            db.session.add(enrollment)
+
+        db.session.commit()
+        return redirect(url_for('list_enrollments'))
+
+    return render_template('create_enrollment.html', title='Create Enrollment', form=form)

@@ -1,13 +1,29 @@
 {% extends 'base.html' %}
+
 {% block main %}
-        <form action="" method="POST" novalidate>
-            {{ form.hidden_tag() }}
-            <p>{{ form.course.label }} <br> {{ form.course() }}
-                {% for error in form.course.errors %}
-                    <br><span class="error">{{ error }}</span>
-                {% endfor %}
-            </p>
-            <p>{{ form.grade.label }} <br> {{ form.grade() }}</p>
-            <p>{{ form.submit() }}</p>
-        </form>
+<h2>Create or Update Course Grade</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div>
+        {{ form.course.label }}<br>
+        {{ form.course() }}
+        {% for error in form.course.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.grade.label }}<br>
+        {{ form.grade() }}
+        {% for error in form.grade.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+
+    <div style="margin-top: 15px;">
+        {{ form.submit() }}
+    </div>
+</form>
 {% endblock %}
