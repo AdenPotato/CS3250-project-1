@@ -1,5 +1,6 @@
 # Builds the Docker image on every PR into dev or main, so a Dockerfile that breaks on a clean
-# checkout fails the PR instead of the grader's build. Pushes the image to GHCR only on main.
+# checkout fails the PR instead of the grader's build. Pushes the image to GHCR on main, and on
+# every published release under the release's tag name.
 name: Docker image
 
 on:
@@ -7,6 +8,8 @@ on:
     branches: [dev, main]
   push:
     branches: [dev, main]
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -16,7 +19,7 @@ jobs:
       contents: read
       packages: write
     env:
-      PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      PUSH: ${{ github.event_name == 'release' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
     steps:
       - uses: actions/checkout@v4
 
@@ -33,12 +36,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # a release adds its tag name; latest moves only on main and on full releases, not pre-releases
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ${{ env.IMAGE }}
+          flavor: latest=false
+          tags: |
+            type=ref,event=tag
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || (github.event_name == 'release' && !github.event.release.prerelease) }}
+            type=raw,value=${{ github.sha }}
+
       - uses: docker/build-push-action@v6
         with:
           context: .
           push: ${{ env.PUSH == 'true' }}
-          tags: |
-            ${{ env.IMAGE }}:latest
-            ${{ env.IMAGE }}:${{ github.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Say where the image went
+        if: env.PUSH == 'true'
+        run: |
+          {
+            echo "### Image pushed"
+            echo '```'
+            echo "${{ steps.meta.outputs.tags }}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
