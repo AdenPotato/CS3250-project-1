@@ -31,6 +31,7 @@ Add rows with `/test-log`.
 | Delete an enrollment - row removed | 2026-10-03 | 21:50 | Johnny De La Garza | passed | Branch `14-johnny-delete-enrollment`, Firefox. Signed in as `johnny` with CS 3250 and MTH 1410 enrolled. Clicked Delete on CS 3250 and confirmed. Expected a return to the list without that row; got `/enrollments` with only MTH 1410 left. |
 | Delete the last enrollment - empty state returns | 2026-10-03 | 21:50 | Johnny De La Garza | passed | Deleted MTH 1410, the only remaining row. Expected the empty state; got "You have no enrollments yet." with no table. |
 | Delete leaves the course in the catalog | 2026-10-03 | 21:50 | Johnny De La Garza | passed | After both deletes, queried the Course table. Expected CS 3250 and MTH 1410 to still exist; both were listed. Re-enrolling could not be tried yet because the add-grade page (create enrollment) is not built. |
+| GPA with no enrollments | 2026-10-04 | 12:28 | Elijah Ortiz | passed | Signed up with a new account and opened `/enrollments` with no enrollments. Expected GPA 0.00 and the page displayed GPA: 0.00. |
 The 2026-10-03 15:01 rows were run on branch `11-aden-auth-routes` as HTTP requests against the dev server (`flask --app app run`), reading the returned status, redirect and page text. Nothing was looked at in a browser, so the page layout is not covered by them.
 
 The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` against a copy of the app with an empty database, the 20:00 rows the same way as the 15:01 ones. A browser pass over the populated list, with rows made on the create page, is still owed once #13 lands.
@@ -63,7 +64,7 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 - [ ] GPA shows on the enrollments page to two decimals
 - [ ] GPA matches a hand calculation for a known set (write the arithmetic in Notes)
-- [ ] GPA with no enrollments is 0.00, not an error
+- [x] GPA with no enrollments is 0.00, not an error
 - [ ] Credit weighting is visible: a 4-credit A and a 1-credit F differ from the unweighted average
 - [ ] An A+ can push the GPA above 4.00
 
