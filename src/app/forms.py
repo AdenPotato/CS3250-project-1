@@ -1,8 +1,8 @@
 '''
 CS3250 - Software Development Methods and Tools
 Instructor: Thyago Mota
-Student:
-Description: Homework 03 - Forms for the User Authentication Web App
+Student(s): Aden Lytle, Johnny De La Garza, Isabella Eaton, Elijah Damian-Ortiz
+Description: Project 1 - GPA Calculator
 '''
 
 from flask_wtf import FlaskForm

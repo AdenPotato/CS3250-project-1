@@ -10,7 +10,6 @@ Add rows with `/test-log`.
 
 | Functionality Tested | Date | Time | Tester | Result | Notes |
 |---|---|---|---|---|---|
-| | | | | | |
 | Deployment - Docker Container Run | 2026-10-02 | 21:15 | Isabella Eaton | failed | Built image and ran container on port 5000. App crashed on GET `/` with `TemplateNotFound: index.html` because templates were missing from `/app/src/app/templates/`. |
 | Deployment - Docker Container Run | 2026-10-02 | 21:25 | Isabella Eaton | passed | Updated Dockerfile to copy `templates/` and `static/` to `/app/src/app/`. Re-built with `--no-cache` and verified app loads cleanly at `http://localhost:5000` with signup, CRUD, and GPA calculation working. |
 | Sign up with valid details | 2026-10-03 | 15:01 | Claude Code (HTTP requests, no browser) | passed | POST `/users/signup` with id `qa150112`, name, about and matching passwords, CSRF token from the form. Expected a redirect to login; got 302 to `/users/login`, and the account then signed in. |
@@ -32,55 +31,50 @@ Add rows with `/test-log`.
 | Delete the last enrollment - empty state returns | 2026-10-03 | 21:50 | Johnny De La Garza | passed | Deleted MTH 1410, the only remaining row. Expected the empty state; got "You have no enrollments yet." with no table. |
 | Delete leaves the course in the catalog | 2026-10-03 | 21:50 | Johnny De La Garza | passed | After both deletes, queried the Course table. Expected CS 3250 and MTH 1410 to still exist; both were listed. Re-enrolling could not be tried yet because the add-grade page (create enrollment) is not built. |
 | GPA with no enrollments | 2026-10-04 | 12:28 | Elijah Ortiz | passed | Signed up with a new account and opened `/enrollments` with no enrollments. Expected GPA 0.00 and the page displayed GPA: 0.00. |
-The 2026-10-03 15:01 rows were run on branch `11-aden-auth-routes` as HTTP requests against the dev server (`flask --app app run`), reading the returned status, redirect and page text. Nothing was looked at in a browser, so the page layout is not covered by them.
-The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` against a copy of the app with an empty database, the 20:00 rows the same way as the 15:01 ones. A browser pass over the populated list, with rows made on the create page, is still owed once #13 lands.
-| #13 create enrollment/update grade (Data Load Verification) | 10.04.26| 10:22| Isabella Eaton| passed |
- Navigated to `/enrollments/create` after running database setup (`init_db.py`). Inspect the Course dropdown list. Every loaded course (all 8) appears as an option labeled `PREFIX NUMBER - Name` (e.g., `CS 3250 - Software Development Methods and Tools`).|
-| #13 create enrollment/update grade (Create Enrollment) | 10.04.26| 10:25| Isabella Eaton| passed | 1. Log in.<br>2. Go to `/enrollments/create`.<br>3. Pick an unenrolled course and select grade `A`.<br>4. Click Submit. Form posts with valid CSRF token; creates a new `Enrollment` row for `current_user`; redirects to `/enrollments` with the new course and grade displayed.|
-| #13 create enrollment/update grade (Update Enrollment) | 10.04.26| 10:27|Isabella Eaton | Passed| 1. Go to `/enrollments/create`.<br>2. Pick the same course used in TC-ENROLL-02.<br>3. Select grade `B+`.<br>4. Click Submit. | Existing record is updated to `B+` without raising an `IntegrityError` / primary key conflict; redirects to `/enrollments` with updated grade `B+`.|
+| #13 create enrollment/update grade (Data Load Verification) | 2026-10-04 | 10:22 | Isabella Eaton | passed | Navigated to `/enrollments/create` after running database setup (`init_db.py`). Inspect the Course dropdown list. Every loaded course (all 8) appears as an option labeled `PREFIX NUMBER - Name` (e.g., `CS 3250 - Software Development Methods and Tools`). |
+| #13 create enrollment/update grade (Create Enrollment) | 2026-10-04 | 10:25 | Isabella Eaton | passed | 1. Log in.<br>2. Go to `/enrollments/create`.<br>3. Pick an unenrolled course and select grade `A`.<br>4. Click Submit. Form posts with valid CSRF token; creates a new `Enrollment` row for `current_user`; redirects to `/enrollments` with the new course and grade displayed. |
+| #13 create enrollment/update grade (Update Enrollment) | 2026-10-04 | 10:27 | Isabella Eaton | passed | 1. Go to `/enrollments/create`.<br>2. Pick the same course used in TC-ENROLL-02.<br>3. Select grade `B+`.<br>4. Click Submit. Existing record is updated to `B+` without raising an `IntegrityError` / primary key conflict; redirects to `/enrollments` with updated grade `B+`. |
 | Delete an enrollment - GPA recomputes | 2026-10-04 | 14:59 | Johnny De La Garza | passed | Branch `14-johnny-r5-gpa-check`, fresh database from `init_db.py`. Signed in as `johnny` and added CS 3250 (4 cr) A, MTH 2140 (2 cr) C, ENG 1010 (3 cr) B on the create page. GPA showed 3.22, matching (16+4+9)/9. Deleted MTH 2140; expected (16+9)/7 = 3.57 and the page showed 3.57. |
-| #17 Manual test log| 10.4.26| 15:20| Isabella| failed| docker was not updated, needed to update docker to showcase correct image with all project updates implemented.|
-| #17 Manual test log| 10.4.26| 15:41| Isabella| passed| test log updated, all program requirements met (R1-R5) thorugh manual testing.|
-| sign up with details and created an account sucessfully |15:49| passed|
-additional requirements shown in coverage cheklist, all passed easily with no error after fixing docker issue, ran in Chrome browser|
-| Sign up with valid details creates the account|IE |10.4.26| 15:49|passed|
-| Sign up with a duplicate id is rejected with a message |IE |10.4.26| 15:49|passed|
-| Sign up with mismatched passwords is rejected |IE |10.4.26| 15:49|passed|
-| Sign in with correct credentials reaches the enrollments page |IE |10.4.26| 15:49|passed|
-| Sign in with a wrong password is rejected, and the message does not reveal which field was wrong |IE |10.4.26| 15:51|passed|
-| Sign in with an unknown id is rejected the same way |IE |10.4.26| 15:51|passed|
-| Sign out ends the session; going back to `/enrollments` redirects to login |IE |10.4.26| 15:51|passed|
-| A new account sees the empty state, not a bare table |IE |10.4.26| 15:51|passed|
-| After creating enrollments, all of them are listed with prefix, number, name, credits and grade |IE |10.4.26| 15:55|passed|
-| Signed in as a second student, only that student's enrollments appear |IE |10.4.26| 15:55|passed|
-| GPA shows on the enrollments page to two decimals |IE |10.4.26| 15:56|passed|
-| GPA matches a hand calculation for a known set (write the arithmetic in Notes) |IE |10.4.26| 15:56|passed|
-notes for R3 view gpa arithmetic 
-((grade)x(weight))+((grade)x(weight))....=gpa
-weight== numberof courses registered/100= % weight per class (assuming even weight)
-((4.0)x(.25))+((3.0)x(.25))+((2.0)x(.25))+((1.0)x(.25))=2.50, matches app result for gpa
-for uneven courses 
-arithmetic: total quality points (credit)/total credit hours
-quality points: grade X credit houts|
-| GPA with no enrollments is 0.00, not an error |IE |10.4.26| 15:56|passed|
-| Credit weighting is visible: a 4-credit A and a 1-credit F differ from the unweighted average |IE |10.4.26| 16:00|passed|
-| An A+ can push the GPA above 4.00 |IE |10.4.26| 16:00|passed|
-| Creating an enrollment for a course already held updates the grade instead of erroring |IE |10.4.26| 16:00|passed|
-| The list and the GPA both reflect the new grade |IE |10.4.26| 16:00|passed|
-| Delete removes the row from the list |IE |10.4.26| 16:00|passed|
-| The GPA recomputes after delete |IE |10.4.26| 16:00|passed|
-| The course still exists afterwards and can be enrolled in again |IE |10.4.26| 16:00|passed|
-| Every loaded course appears in the create-enrollment dropdown |IE |10.4.26| 16:02|passed|
-| 'enrollments`, `/enrollments/create` and delete all redirect to login when signed out |IE |10.4.26| 16:00|passed|
-| Editing the delete URL to another student's course does not delete their enrollment |10.4.26| 16:00|passed|
-| The database holds a bcrypt hash, not a plaintext password (check with `sqlite3` or a viewer)
+| #17 Manual test log | 2026-10-04 | 15:20 | Isabella Eaton | failed | docker was not updated, needed to update docker to showcase correct image with all project updates implemented. |
+| #17 Manual test log (retest) | 2026-10-04 | 15:41 | Isabella Eaton | passed | Retest of the 15:20 failure. test log updated, all program requirements met (R1-R5) through manual testing. |
+| Sign up with details and created an account successfully | 2026-10-04 | 15:49 | Isabella Eaton | passed | Additional requirements shown in coverage checklist, all passed easily with no error after fixing docker issue, ran in Chrome browser. |
+| Sign up with valid details creates the account | 2026-10-04 | 15:49 | Isabella Eaton | passed |  |
+| Sign up with a duplicate id is rejected with a message | 2026-10-04 | 15:49 | Isabella Eaton | passed |  |
+| Sign up with mismatched passwords is rejected | 2026-10-04 | 15:49 | Isabella Eaton | passed |  |
+| Sign in with correct credentials reaches the enrollments page | 2026-10-04 | 15:49 | Isabella Eaton | passed |  |
+| Sign in with a wrong password is rejected, and the message does not reveal which field was wrong | 2026-10-04 | 15:51 | Isabella Eaton | passed |  |
+| Sign in with an unknown id is rejected the same way | 2026-10-04 | 15:51 | Isabella Eaton | passed |  |
+| Sign out ends the session; going back to `/enrollments` redirects to login | 2026-10-04 | 15:51 | Isabella Eaton | passed |  |
+| A new account sees the empty state, not a bare table | 2026-10-04 | 15:51 | Isabella Eaton | passed |  |
+| After creating enrollments, all of them are listed with prefix, number, name, credits and grade | 2026-10-04 | 15:55 | Isabella Eaton | passed |  |
+| Signed in as a second student, only that student's enrollments appear | 2026-10-04 | 15:55 | Isabella Eaton | passed |  |
+| GPA shows on the enrollments page to two decimals | 2026-10-04 | 15:56 | Isabella Eaton | passed |  |
+| GPA matches a hand calculation for a known set | 2026-10-04 | 15:56 | Isabella Eaton | passed | Notes for R3 view gpa arithmetic: ((grade)x(weight))+((grade)x(weight))....=gpa. weight == number of courses registered/100 = % weight per class (assuming even weight). ((4.0)x(.25))+((3.0)x(.25))+((2.0)x(.25))+((1.0)x(.25))=2.50, matches app result for gpa. For uneven courses the arithmetic is total quality points / total credit hours, where quality points = grade x credit hours. |
+| GPA with no enrollments is 0.00, not an error | 2026-10-04 | 15:56 | Isabella Eaton | passed |  |
+| Credit weighting is visible: a 4-credit A and a 1-credit F differ from the unweighted average | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| An A+ can push the GPA above 4.00 | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| Creating an enrollment for a course already held updates the grade instead of erroring | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| The list and the GPA both reflect the new grade | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| Delete removes the row from the list | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| The GPA recomputes after delete | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| The course still exists afterwards and can be enrolled in again | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| `/enrollments`, `/enrollments/create` and delete all redirect to login when signed out | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| Editing the delete URL to another student's course does not delete their enrollment | 2026-10-04 | 16:00 | Isabella Eaton | passed |  |
+| Every loaded course appears in the create-enrollment dropdown | 2026-10-04 | 16:02 | Isabella Eaton | passed |  |
+| Deployment - `docker build` succeeds from a clean clone | 2026-10-04 | 16:03 | Isabella Eaton | passed |  |
+| Deployment - the container runs and the app is reachable on the mapped port | 2026-10-04 | 16:03 | Isabella Eaton | passed |  |
+| The database holds a bcrypt hash, not a plaintext password | 2026-10-04 | 16:56 | Claude Code (command line) | passed | Clean export of `dev` at e267217, fresh database, two accounts signed up over HTTP. Read `passwd` back through the `User` model. Expected a bcrypt hash; both were 60 bytes starting `$2b$12$`, neither the typed password. |
+| `pip install GPA-Calculator-CS3250-aden` from PyPI in a clean venv | 2026-10-04 | 16:56 | Claude Code (command line) | passed | New empty venv outside the repo, `pip install GPA-Calculator-CS3250-aden`. Expected 0.1.0 to install and `calculate_gpa` to import and run; `pip list` showed 0.1.0, the import resolved to `site-packages/gpa_calculator`, and `calculate_gpa([{'grade':'A','credits':3}])` returned 4.0. |
+| Create page links back to the enrollments list | 2026-10-04 | 17:12 | Claude Code (HTTP requests, no browser) | passed | Branch `28-aden-final-validation`, copy of the app laid out as the Docker image is (no `src/gpa_calculator`), fresh database. Signed in and opened `/enrollments/create`. Expected a link to `/enrollments`; the page has "Back to enrollments" pointing there. An earlier run at 16:56 on `dev` found no such link, which is what this fixes. |
+| New account's GPA 0.00 is not shown as a low-GPA warning | 2026-10-04 | 17:12 | Claude Code (HTTP requests, no browser) | passed | Same run. A new account's `/enrollments` showed GPA 0.00 without the `low_gpa` class; a second student with CS 1050 A+ and CS 3250 F still showed 2.15 with it. |
+| Full R1-R5 pass with the library imported from PyPI | 2026-10-04 | 17:12 | Claude Code (HTTP requests, no browser) | passed | Same run, 43 checks: signup and its rejections, sign in and out, empty state, 8 courses in the dropdown, three enrollments giving 3.22 = (16+9+4)/9, an update giving 3.73 = (16+9+8.6)/9, a delete giving 3.57 = (16+9)/7, a second student's isolation, and a 404 on deleting another student's course. `gpa_calculator` resolved to `site-packages`, not the repo copy. Not run inside a container. |
+| Deployment - `docker build --no-cache` on branch `28-aden-final-validation` | 2026-10-04 | 17:21 | Claude Code (command line) | passed | Built from the working tree of the branch, not a fresh clone, with Docker 29.8.2. Expected all 11 steps to finish; the image built and tagged. |
+| Deployment - container imports `gpa_calculator` from PyPI | 2026-10-04 | 17:22 | Claude Code (command line) | passed | Ran the image and looked inside the container. Expected no `gpa_calculator` folder under `/app/src` and the import to resolve to the pip install; `/app/src` held only `app`, `init_db.py`, `instance`, `pyproject.toml` and `README.md`, the import resolved to `/usr/local/lib/python3.12/site-packages/gpa_calculator`, and `pip list` showed 0.1.0. |
+| Deployment - full R1-R5 pass against the running container | 2026-10-04 | 17:22 | Claude Code (HTTP requests, no browser) | passed | Container mapped to host port 5060. The startup log printed "Loaded 8 courses, 8 in the catalog." The same 43 checks as the 17:12 row all passed, with the same GPA values (3.22, 3.73, 3.57, 4.30), and the container log showed no 500 responses. |
 
+The 2026-10-03 15:01 rows were run on branch `11-aden-auth-routes` as HTTP requests against the dev server (`flask --app app run`), reading the returned status, redirect and page text. Nothing was looked at in a browser, so the page layout is not covered by them.
 
-### Deployment
-
-- [x] `docker build` succeeds from a clean clone |IE |10.4.26| 16:03|passed|
-- [x] The container runs and the app is reachable on the mapped port |IE |10.4.26| 16:03|passed|
-- [ ] `pip install <dist-name>` from PyPI works in a clean venv, and `calculate_gpa` imports and runs
+The 2026-10-03 19:59 and 20:00 rows were run on branch `10-aden-course-load` against a copy of the app with an empty database, the 20:00 rows the same way as the 15:01 ones. A browser pass over the populated list, with rows made on the create page, is still owed once #13 lands.
 
 Result is `passed` or `failed`. A `failed` row **stays in the table** - delete nothing. When it is fixed, add a new row for the retest and reference the failure. A log with no failures in it reads as a log nobody actually used.
 
@@ -141,7 +135,7 @@ Every requirement needs at least one row before delivery. Tick these off against
 
 - [x] `docker build` succeeds from a clean clone 
 - [x] The container runs and the app is reachable on the mapped port 
-- [ ] `pip install <dist-name>` from PyPI works in a clean venv, and `calculate_gpa` imports and runs
+- [x] `pip install <dist-name>` from PyPI works in a clean venv, and `calculate_gpa` imports and runs
 
 ---
 

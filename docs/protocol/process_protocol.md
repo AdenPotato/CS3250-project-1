@@ -81,22 +81,22 @@ The definition of done for the whole project. Keep the status column current; `/
 
 | Pts | Item | Phase | Status |
 |---|---|---|---|
-| +5 | Planning: schedule | Planning | not started |
-| +5 | Planning: team roles | Planning | not started |
+| +5 | Planning: schedule | Planning | done |
+| +5 | Planning: team roles | Planning | done |
 | +5 | Modeling: use case diagram | Modeling | done |
 | +5 | Modeling: class diagram | Modeling | done |
-| +5 | Checkpoint | Modeling | not started |
+| +5 | Checkpoint | Modeling | done |
 | +10 | Courses data load (`init_db.py`, 5+ courses) | Construction | done |
-| +5 | Authentication (signup, login, signout) | Construction | in progress |
+| +5 | Authentication (signup, login, signout) | Construction | done |
 | +10 | List of enrollments | Construction | done |
-| +10 | Create enrollment | Construction | not started |
+| +10 | Create enrollment | Construction | done |
 | +10 | Delete enrollment | Construction | done |
-| +10 | GPA calculation and display | Construction | not started |
+| +10 | GPA calculation and display | Construction | done |
 | +10 | GPA PyPI build and deployment | Deployment | done |
-| +5 | Testing (manual test report) | Construction | not started |
-| +5 | Deployment (Dockerfile) | Deployment | not started |
+| +5 | Testing (manual test report) | Construction | done |
+| +5 | Deployment (Dockerfile) | Deployment | done |
 | **-25** | **Team/self evaluation not submitted** | any | **outstanding** |
-| **-5** | **`main` not protected** | Planning | **outstanding** |
+| **-5** | **`main` not protected** | Planning | cleared - "Protect main" ruleset active |
 
 **100 points available, and 30 points of penalty that cost nothing to avoid.** Protect `main` in week one and submit the evaluation form; those two are pure loss otherwise.
 

@@ -53,17 +53,17 @@ Round for display in the template, not in the library. `calculate_gpa` returns t
 ```toml
 [project]
 name = "GPA-Calculator-CS3250-aden"   # must be globally unique on PyPI
-version = "0.0.1"
-authors = [{ name="...", email="..." }]
-description = "..."
+version = "0.1.0"
+authors = [{ name="AdenPotato" }]
+description = "Credit-weighted GPA calculation from letter grades and credit hours"
 readme = "README.md"
 requires-python = ">=3.10"
 ```
 
 - **The name must be unique on PyPI and is permanent.** Check availability at `pypi.org/project/<name>/` before building. Something like `gpa-calculator-cs3250-<team>` is safer than `gpalib`.
 - **The distribution name and the import name can differ.** `name = "gpa-calculator-cs3250-team7"` installs a package you still `import gpa_calculator`. Say which is which in the README so the grader can install and import it.
-- **Update `[project.urls]`** - the placeholders point at the PyPI sample project, not this repo.
-- **`description` and `readme`** are what the PyPI page shows. `src/README.md` currently reads "This is my lib"; make it a real short README with an install line and a usage example.
+- **`[project.urls]`** points at this repo and its issue tracker.
+- **`description` and `readme`** are what the PyPI page shows. `src/README.md` has the install line, a usage example and the grade scale.
 - **Bump `version` on every upload.** PyPI refuses a re-upload of an existing version, permanently, even after a delete. A typo in `0.0.1` costs you `0.0.2`.
 
 ## Publishing
@@ -95,13 +95,13 @@ That last command is the proof for the rubric. Screenshot it.
 
 ## Wiring it back into the app
 
-Once published, `routes.py` drops the placeholder import:
+`routes.py` imports the function by its package name:
 
 ```python
 from gpa_calculator import calculate_gpa
 ```
 
-and the distribution name goes in `requirements.txt` so the Docker build installs it from PyPI. That is what makes the package real rather than a file that happens to sit in the repo.
+and `requirements.txt` pins `GPA-Calculator-CS3250-aden==0.1.0` so the Docker build installs it from PyPI. `.dockerignore` keeps `src/gpa_calculator/` out of the image, so the container runs the published copy rather than the file that happens to sit in the repo. Run locally from `src/`, the repo copy is first on the path and wins - keep the two the same.
 
 ---
 

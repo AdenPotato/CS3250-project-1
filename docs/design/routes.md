@@ -36,7 +36,7 @@ Renders the landing page. Pass a `title`. If the visitor is already signed in, l
 2. Hash: `bcrypt.hashpw(form.passwd.data.encode(), bcrypt.gensalt())`.
 3. Insert the `User`, commit, redirect to `login`.
 
-`passwd_confirm` needs an `EqualTo('passwd')` validator added in `forms.py` - the baseline has the field but not the check.
+`passwd_confirm` carries an `EqualTo('passwd')` validator in `forms.py`, so a mismatch is rejected by the form before the route sees it.
 
 ### `login`
 
@@ -57,7 +57,7 @@ The main page, and where two rubric lines are earned at once.
 
 ### `create_enrollment`
 
-**GET**: build the form and populate `form.course.choices` from the `Course` table. The value carries both key halves; `f'{c.prefix} {c.number}'` as the value and `f'{c.prefix} {c.number} - {c.name}'` as the label works.
+**GET**: build the form and populate `form.course.choices` from the `Course` table. The value carries both key halves: `f'{c.prefix}:{c.number}'` is the value and `f'{c.prefix} {c.number} - {c.name}'` is the label.
 
 **POST**, after repopulating the choices (a `SelectField` revalidates against them, so a form built without choices on POST always fails):
 
@@ -69,7 +69,7 @@ Step 2 is the whole of requirement R4 and it is three lines. Skipping it means a
 
 ### `delete_enrollment`
 
-POST only. Validate the `DeleteEnrollmentForm` for CSRF, then delete the row matching `(current_user.id, course_prefix, course_number)` - **the user id from the session, never from the URL.** Commit and redirect to `list_enrollments`. A missing row is not an error; redirect anyway.
+POST only. Validate the `DeleteEnrollmentForm` for CSRF, then delete the row matching `(current_user.id, course_prefix, course_number)` - **the user id from the session, never from the URL.** Commit and redirect to `list_enrollments`. A failed CSRF check is a 400, and a row the student does not hold - including another student's course - is a 404.
 
 ---
 
@@ -80,6 +80,6 @@ POST only. Validate the `DeleteEnrollmentForm` for CSRF, then delete the row mat
 - Redirect after every successful POST so refresh does not resubmit.
 - `flash` a short confirmation on create, update and delete if the team wants one; if so, render messages in `base.html` so every page gets them.
 
-## Where the stubs are
+## Where the stubs were
 
-All six non-index routes ship as `return "Work in progress..."`. There is no partial credit in the baseline - each one is written from nothing, and each maps to a rubric line worth 5 to 10 points.
+All six non-index routes shipped in the baseline as `return "Work in progress..."`. Every one is now implemented; none remain.

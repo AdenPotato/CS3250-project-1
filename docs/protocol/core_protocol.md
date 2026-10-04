@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 Dependencies the assignment fixes: `flask`, `flask-wtf`, `flask-sqlalchemy`, `flask-login`, `bcrypt`. Adding anything else needs a reason - the grader runs `pip install -r requirements.txt` and then the Docker build, and every addition is a thing that can fail there.
 
-Development-only additions (`pytest`, `pytest-flask`) go in `requirements-dev.txt` so the runtime image stays thin.
+Development-only additions (`pytest`) go in `requirements-dev.txt` so the runtime image stays thin.
 
 ## Running it
 

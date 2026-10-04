@@ -89,7 +89,7 @@ Every view function in `routes.py`. The full table with methods, auth and templa
 Every form is a Flask-WTF `FlaskForm` in `forms.py`. This is not optional: `FlaskForm` is what provides the CSRF token, and `{{ form.hidden_tag() }}` in the template is what renders it. A hand-written `<form>` posting to a route is a security hole and a review rejection.
 
 - **Validate on the server.** `form.validate_on_submit()` gates every POST. HTML5 `required` is a convenience, not a check.
-- **Two fields the baseline leaves open:** `SignUpForm.passwd_confirm` needs an `EqualTo('passwd')` validator, and `EnrollmentForm.course` is a `SelectField` with no choices - populate them in the route from the `Course` table, formatting each as `(f'{c.prefix} {c.number}', f'{c.prefix} {c.number} - {c.name}')`.
+- **Two fields the baseline left open:** `SignUpForm.passwd_confirm` has an `EqualTo('passwd')` validator, and `EnrollmentForm.course` is a `SelectField` with no choices on the class - the route populates them from the `Course` table, formatting each as `(f'{c.prefix}:{c.number}', f'{c.prefix} {c.number} - {c.name}')`.
 - **Re-render with errors on failure**, with the user's input preserved, rather than redirecting. `render_template('create_enrollment.html', form=form)` does this for free.
 - `DeleteEnrollmentForm` exists solely to carry a CSRF token on the delete button. Keep it.
 

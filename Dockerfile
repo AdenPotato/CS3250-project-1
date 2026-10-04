@@ -6,7 +6,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code
+# Copy source code - .dockerignore leaves src/gpa_calculator out, so the app imports the PyPI install
 COPY src/ ./src/
 
 # Copy templates and static files beside src/, where the app looks for them (../../ from src/app)

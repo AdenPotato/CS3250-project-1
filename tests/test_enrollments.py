@@ -126,3 +126,27 @@ def test_delete_missing_enrollment_returns_404(client):
     login(client, 'alice')
     response = client.post('/enrollments/delete/XX/0000')
     assert response.status_code == 404
+
+
+# small fixes from the final walkthrough (#28)
+
+def test_empty_state_gpa_is_not_flagged_low(client):
+    add_user('alice')
+    login(client, 'alice')
+    html = client.get('/enrollments').text
+    assert '0.00' in html
+    assert 'low_gpa' not in html
+
+
+def test_low_gpa_is_still_flagged_with_enrollments(client):
+    add_user('alice')
+    add_course('CS', '3250', 'Software Development Methods and Tools', 4)
+    enroll('alice', 'CS', '3250', 'D')
+    login(client, 'alice')
+    assert 'class="low_gpa">1.00<' in client.get('/enrollments').text
+
+
+def test_create_page_links_back_to_the_list(client):
+    add_user('alice')
+    login(client, 'alice')
+    assert 'href="/enrollments"' in client.get('/enrollments/create').text
