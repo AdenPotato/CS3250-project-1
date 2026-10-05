@@ -1,4 +1,36 @@
 @startuml class
 left to right direction
+hide circle
+skinparam classAttributeIconSize 0
 
+class User {
+  +id : String <<PK>>
+  +name : String
+  +about : String
+  +passwd : LargeBinary
+}
+
+class Course {
+  +prefix : String <<PK>>
+  +number : String <<PK>>
+  +name : String
+  +credits : Integer
+}
+
+class Enrollment <<association class>> {
+  +user_id : String <<PK,FK>>
+  +course_prefix : String <<PK,FK>>
+  +course_number : String <<PK,FK>>
+  +grade : String
+}
+
+User "1" -- "0..*" Enrollment
+Course "1" -- "0..*" Enrollment
+
+note bottom of Enrollment
+  association class - resolves the
+  User-Course many-to-many and carries the grade.
+  FK user_id -> users.id
+  FK (course_prefix, course_number) -> courses(prefix, number)
+end note
 @enduml

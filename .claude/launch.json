@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "flask-dev",
+      "runtimeExecutable": "flask",
+      "runtimeArgs": ["--app", "app", "run", "--debug"],
+      "cwd": "src",
+      "port": 5000
+    },
+    {
+      "name": "init-db",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["init_db.py"],
+      "cwd": "src"
+    }
+  ]
+}

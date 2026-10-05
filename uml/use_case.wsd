@@ -1,3 +1,30 @@
 @startuml use_case
+left to right direction
 
+actor Visitor
+actor Student
+
+rectangle "GPA Calculator Web App" {
+  usecase UC1 as "Sign up"
+  usecase UC2 as "Sign in"
+  usecase UC3 as "Sign out"
+  usecase UC4 as "View enrollments"
+  usecase UC5 as "View GPA"
+  usecase UC6 as "Record an enrollment"
+  usecase UC7 as "Update a grade"
+  usecase UC8 as "Delete an enrollment"
+}
+
+Student --|> Visitor : Visitor becomes\nStudent at sign in
+
+Visitor --> UC1
+Visitor --> UC2
+Student --> UC3
+Student --> UC4
+Student --> UC6
+Student --> UC7
+Student --> UC8
+
+UC4 ..> UC5 : <<include>>
+UC7 ..> UC6 : <<extend>>
 @enduml

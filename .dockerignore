@@ -1,0 +1,8 @@
+.venv/
+.git/
+**/__pycache__/
+**/instance/
+**/*.pyc
+.DS_Store
+# the image gets gpa_calculator from PyPI via requirements.txt, not from the repo copy
+src/gpa_calculator/

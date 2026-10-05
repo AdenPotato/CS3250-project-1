@@ -1,15 +1,17 @@
 '''
 CS3250 - Software Development Methods and Tools
 Instructor: Thyago Mota
-Student(s):
+Student(s): Aden Lytle, Johnny De La Garza, Isabella Eaton, Elijah Damian-Ortiz
 Description: Project 1 - GPA Calculator
 '''
 
 from flask import Flask
 import os
 
-app = Flask("GPA Calculator Web App")
-app.secret_key = 'You will never know!'
+# templates/ and static/ sit at the repo root, two levels above this package
+app = Flask(__name__, template_folder='../../templates', static_folder='../../static')
+# the fallback is for local development only - delivery passes SECRET_KEY
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-only-not-for-delivery')
 
 # db initialization
 from flask_sqlalchemy import SQLAlchemy
@@ -25,6 +27,8 @@ with app.app_context():
 from flask_login import LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
+# where @login_required sends a signed-out visitor
+login_manager.login_view = 'login'
 
 from app.models import User
 

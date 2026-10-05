@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block main %}
+        <h1>Create or Update Course Grade</h1>
         <form action="" method="POST" novalidate>
             {{ form.hidden_tag() }}
             <p>{{ form.course.label }} <br> {{ form.course() }}
@@ -7,7 +8,12 @@
                     <br><span class="error">{{ error }}</span>
                 {% endfor %}
             </p>
-            <p>{{ form.grade.label }} <br> {{ form.grade() }}</p>
+            <p>{{ form.grade.label }} <br> {{ form.grade() }}
+                {% for error in form.grade.errors %}
+                    <br><span class="error">{{ error }}</span>
+                {% endfor %}
+            </p>
             <p>{{ form.submit() }}</p>
         </form>
+        <p><a href="{{ url_for('list_enrollments') }}">Back to enrollments</a></p>
 {% endblock %}
